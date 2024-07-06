@@ -78,8 +78,7 @@ const AddNote = () => {
         </div>
         <div className="mb-3">
           <label htmlFor="tag" className="form-label">
-            Tag
-            (Personal/General/Education/Entertainment/Movies/Music/Sports/...)
+            Tag (Personal/Education/Entertainment/Movies/Music/Sports/...)
           </label>
           <input
             type="text"
