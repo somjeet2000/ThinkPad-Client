@@ -2,54 +2,14 @@ import React, { useState, useContext } from 'react';
 import noteContext from '../context/notes/NoteContext';
 
 const EditNote = (props) => {
-  const { reference, referenceClose, currNote } = props;
-  const context = useContext(noteContext);
-  const { editNote } = context;
+  const { reference, referenceClose, selectedNote } = props;
+  console.log(selectedNote);
 
-  const [editTitle, setEditTitle] = useState(currNote.title);
-  const [editDescription, setEditDescription] = useState(currNote.description);
-  const [editTag, setEditTag] = useState(currNote.tag);
+  const { eTitle, eDescription, eTag } = selectedNote;
+  console.log(eTitle, eDescription, eTag);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    console.log(name, value);
-
-    switch (name) {
-      case 'editTitle':
-        setEditTitle(value);
-        break;
-
-      default:
-        break;
-    }
-    switch (name) {
-      case 'editDescription':
-        setEditDescription(value);
-        break;
-
-      default:
-        break;
-    }
-    switch (name) {
-      case 'editTag':
-        setEditTag(value);
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  const handleClick = () => {
-    console.log(
-      `Updating the note...
-      ${editTitle}, 
-      ${editDescription}, 
-      ${editTag}, 
-      ${currNote._id}`
-    );
-    editNote(editTitle, editDescription, editTag, currNote._id);
-    referenceClose.current.click();
+  const handleClick = (event) => {
+    event.preventDefault();
   };
 
   return (
@@ -96,8 +56,8 @@ const EditNote = (props) => {
                     id="editTitle"
                     name="editTitle"
                     aria-describedby="emailHelp"
-                    onChange={handleChange}
-                    value={editTitle}
+                    // onChange={handleChange}
+                    // value={selectedNote.eTitle}
                   />
                 </div>
                 <div className="mb-3">
@@ -109,8 +69,8 @@ const EditNote = (props) => {
                     className="form-control"
                     id="editDescription"
                     name="editDescription"
-                    onChange={handleChange}
-                    value={editDescription}
+                    // onChange={handleChange}
+                    // value={selectedNote.eDescription}
                   />
                 </div>
                 <div className="mb-3">
@@ -122,8 +82,8 @@ const EditNote = (props) => {
                     className="form-control"
                     id="editTag"
                     name="editTag"
-                    onChange={handleChange}
-                    value={editTag}
+                    // onChange={handleChange}
+                    // value={selectedNote.eTag}
                   />
                 </div>
               </form>
