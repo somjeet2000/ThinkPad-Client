@@ -1,15 +1,34 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import noteContext from '../context/notes/NoteContext';
 
 const EditNote = (props) => {
   const { reference, referenceClose, selectedNote } = props;
-  console.log(selectedNote);
+  const [editNote, setEditNote] = useState(selectedNote);
+  const context = useContext(noteContext);
+  const { updateNote } = context;
 
-  const { eTitle, eDescription, eTag } = selectedNote;
-  console.log(eTitle, eDescription, eTag);
+  /* 
+  The useEffect hook ensures that whenever the selectedNote prop changes, the local state editNote is updated accordingly.
+  */
+  useEffect(() => {
+    setEditNote(selectedNote);
+  }, [selectedNote]);
 
-  const handleClick = (event) => {
-    event.preventDefault();
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    console.log(name, value);
+    setEditNote({ ...editNote, [name]: value });
+  };
+
+  const handleClick = () => {
+    console.log('Updating the note...', editNote);
+    updateNote(
+      editNote._id,
+      editNote.title,
+      editNote.description,
+      editNote.tag
+    );
+    referenceClose.current.click();
   };
 
   return (
@@ -47,43 +66,43 @@ const EditNote = (props) => {
             <div className="modal-body">
               <form>
                 <div className="mb-3">
-                  <label htmlFor="editTitle" className="form-label">
+                  <label htmlFor="title" className="form-label">
                     Title
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="editTitle"
-                    name="editTitle"
+                    id="title"
+                    name="title"
                     aria-describedby="emailHelp"
-                    // onChange={handleChange}
-                    // value={selectedNote.eTitle}
+                    value={editNote.title}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="editDescription" className="form-label">
+                  <label htmlFor="description" className="form-label">
                     Description
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="editDescription"
-                    name="editDescription"
-                    // onChange={handleChange}
-                    // value={selectedNote.eDescription}
+                    id="description"
+                    name="description"
+                    value={editNote.description}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="editTag" className="form-label">
+                  <label htmlFor="tag" className="form-label">
                     Tag
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="editTag"
-                    name="editTag"
-                    // onChange={handleChange}
-                    // value={selectedNote.eTag}
+                    id="tag"
+                    name="tag"
+                    value={editNote.tag}
+                    onChange={handleChange}
                   />
                 </div>
               </form>

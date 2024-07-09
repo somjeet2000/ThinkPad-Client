@@ -33,7 +33,6 @@ const NoteState = (props) => {
       body: JSON.stringify({ title, description, tag }),
     });
     const addNoteJSON = await response.json();
-    console.log(addNoteJSON);
     let newNote = addNoteJSON;
     setNotes(notes.concat(newNote));
   };
@@ -57,8 +56,8 @@ const NoteState = (props) => {
     setAlert(deleteNote.Success);
   };
 
-  // Edit a note
-  const editNote = async (editTitle, editDescription, editTag, id) => {
+  // Update a note
+  const updateNote = async (id, title, description, tag) => {
     const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
       method: 'PUT',
       headers: {
@@ -66,12 +65,25 @@ const NoteState = (props) => {
         'auth-token':
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOnsiaWQiOiI2Njg1YTQ2N2NhNTEzZTA4MGE2NjVhOTkifSwiaWF0IjoxNzIwMTE5MzQwfQ.uwPvcPRqxHSOyb0ChSl-6VrhuO1ekd757dRBRvWGaS8',
       },
-      body: JSON.stringify({ editTitle, editDescription, editTag }),
+      body: JSON.stringify({ title, description, tag }),
     });
     const editNoteResponse = await response.json();
-    console.log(editNoteResponse);
 
-    // Logic to update the values
+    // Logic to update the values in Client side
+    /*
+    We can't set the state variable directly like this way. Instead we have to create a new variable and when the state variable has been updated, the new variable will also updated automatically.
+    */
+    let updatedNotes = JSON.parse(JSON.stringify(notes));
+    for (let i = 0; i < updatedNotes.length; i++) {
+      const element = updatedNotes[i];
+      if (element._id === id) {
+        updatedNotes[i].title = title;
+        updatedNotes[i].description = description;
+        updatedNotes[i].tag = tag;
+        break;
+      }
+    }
+    setNotes(updatedNotes);
   };
 
   return (
@@ -81,7 +93,7 @@ const NoteState = (props) => {
         getAllNotes,
         addNote,
         deleteNote,
-        editNote,
+        updateNote,
         alert,
       }}
     >

@@ -6,24 +6,17 @@ import EditNote from './EditNote';
 const Notes = () => {
   const context = useContext(noteContext);
   const { notes, getAllNotes } = context;
-
-  const [selectedNote, setSelectedNote] = useState({
-    eTitle: '',
-    eDescription: '',
-    eTag: '',
-  });
+  const [selectedNote, setSelectedNote] = useState(null);
 
   let ref = useRef(null);
   let refClose = useRef(null);
 
   const updateNote = (currentNote) => {
-    ref.current.click();
-    console.log(currentNote);
-    setSelectedNote({
-      eTitle: currentNote.title,
-      eDescription: currentNote.description,
-      eTag: currentNote.tag,
-    });
+    setSelectedNote(currentNote);
+    // Adding a small timeout to ensure the state is updated
+    setTimeout(() => {
+      ref.current.click();
+    }, 0);
   };
 
   // To display the notes for the user.
@@ -34,20 +27,24 @@ const Notes = () => {
   return (
     <div className="container my-3">
       <div className="row">
-        {/* You can't use ref={ref} here, you have to use reference or any other prop name. */}
-        <EditNote
-          reference={ref}
-          referenceClose={refClose}
-          selectedNote={selectedNote}
-          onChange={(e) => setSelectedNote(e.target.value)}
-        />
         <h2>Your Notes</h2>
+        <div className="container mx-1">
+          {notes.length === 0 && 'No Notes to display.'}
+        </div>
         {notes.map((notes) => {
           return (
             <NoteItem key={notes._id} notes={notes} updateNote={updateNote} />
           );
         })}
       </div>
+      {/* You can't use ref={ref} here, you have to use reference or any other prop name. */}
+      {selectedNote && (
+        <EditNote
+          reference={ref}
+          referenceClose={refClose}
+          selectedNote={selectedNote}
+        />
+      )}
     </div>
   );
 };
