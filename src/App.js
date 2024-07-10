@@ -4,6 +4,9 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import About from './components/About';
 import NoteState from './context/notes/NoteState';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import AuthenticationState from './context/authentication/AuthenticationState';
 
 /*
 Very Important:-
@@ -18,14 +21,18 @@ function App() {
   return (
     <>
       <NoteState>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Navbar />}>
-              <Route index element={<Home />} />
-              <Route path="about" element={<About />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+        <AuthenticationState>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Navbar />}>
+                <Route index element={<Home />} />
+                <Route path="about" element={<About />} />
+                <Route path="login" element={<Login />} />
+                <Route path="signup" element={<Signup />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AuthenticationState>
       </NoteState>
     </>
   );

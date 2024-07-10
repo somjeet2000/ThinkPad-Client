@@ -6,6 +6,8 @@ const EditNote = (props) => {
   const [editNote, setEditNote] = useState(selectedNote);
   const context = useContext(noteContext);
   const { updateNote } = context;
+  const [titleError, setTitleError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
 
   /* 
   The useEffect hook ensures that whenever the selectedNote prop changes, the local state editNote is updated accordingly.
@@ -17,18 +19,42 @@ const EditNote = (props) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     console.log(name, value);
+    setTitleError('');
+    setDescriptionError('');
     setEditNote({ ...editNote, [name]: value });
   };
 
-  const handleClick = () => {
-    console.log('Updating the note...', editNote);
-    updateNote(
-      editNote._id,
-      editNote.title,
-      editNote.description,
-      editNote.tag
-    );
-    referenceClose.current.click();
+  const handleClick = (event) => {
+    event.preventDefault();
+    // Validation in the client for title and description
+    let isValid = true;
+    if (editNote.title.length === 0) {
+      setTitleError('Title cannot be empty');
+      isValid = false;
+    }
+    if (editNote.description.length === 0) {
+      setDescriptionError('Description cannot be empty');
+      isValid = false;
+    } else if (editNote.description.length < 5) {
+      setDescriptionError('Description should be atleast 5 characters');
+      isValid = false;
+    }
+    if (isValid) {
+      console.log('Updating the note...', editNote);
+      updateNote(
+        editNote._id,
+        editNote.title,
+        editNote.description,
+        editNote.tag
+      );
+      referenceClose.current.click();
+    }
+  };
+
+  const handleClick1 = () => {
+    setTitleError('');
+    setDescriptionError('');
+    setEditNote(selectedNote);
   };
 
   return (
@@ -61,6 +87,7 @@ const EditNote = (props) => {
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                onClick={handleClick1}
               ></button>
             </div>
             <div className="modal-body">
@@ -79,6 +106,9 @@ const EditNote = (props) => {
                     onChange={handleChange}
                   />
                 </div>
+                <p style={{ color: '#bf2d31', fontWeight: '500' }}>
+                  {titleError}
+                </p>
                 <div className="mb-3">
                   <label htmlFor="description" className="form-label">
                     Description
@@ -92,6 +122,9 @@ const EditNote = (props) => {
                     onChange={handleChange}
                   />
                 </div>
+                <p style={{ color: '#bf2d31', fontWeight: '500' }}>
+                  {descriptionError}
+                </p>
                 <div className="mb-3">
                   <label htmlFor="tag" className="form-label">
                     Tag
@@ -113,6 +146,7 @@ const EditNote = (props) => {
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
+                onClick={handleClick1}
               >
                 Close
               </button>
