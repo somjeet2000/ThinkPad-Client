@@ -1,7 +1,11 @@
+import { useContext } from 'react';
 import authContext from './AuthenticationContext';
+import alertContext from '../alert/AlertContext';
 
 function AuthenticationState(props) {
   const host = 'http://localhost:5000';
+  const context = useContext(alertContext);
+  const { showAlert } = context;
 
   // Register User
   const registerUser = async (userName, email, password, navigate) => {
@@ -19,7 +23,11 @@ function AuthenticationState(props) {
       localStorage.setItem('token', responseJSON.authToken);
       navigate('/');
     } else {
-      alert(responseJSON.error);
+      // alert(responseJSON.error);
+      showAlert(
+        'User with this email already exists. Please enter an unique email.',
+        'danger'
+      );
     }
   };
 
@@ -39,7 +47,8 @@ function AuthenticationState(props) {
       localStorage.setItem('token', responseJSON.authToken);
       navigate('/');
     } else {
-      alert(responseJSON.error);
+      // alert(responseJSON.error);
+      showAlert('Please try to login with the correct credentials', 'danger');
     }
   };
 

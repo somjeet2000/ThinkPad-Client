@@ -1,17 +1,16 @@
 import React, { useContext } from 'react';
 import Notes from './Notes';
-import Alert from './Alert';
 import AddNote from './AddNote';
-import noteContext from '../context/notes/NoteContext';
-import EditNote from './EditNote';
+import Alert from './Alert';
+import alertContext from '../context/alert/AlertContext';
 
-const Home = () => {
-  const context = useContext(noteContext);
-  const { alert } = context;
+const Home = (props) => {
+  const context = useContext(alertContext);
+  const { alert, showAlert } = context;
   return (
     <>
-      <Alert message={alert} />
-      <AddNote />
+      <Alert alert={alert} />
+      <AddNote showAlert={showAlert} />
       <Notes />
     </>
   );

@@ -1,11 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
 import noteContext from '../context/notes/NoteContext';
+import alertContext from '../context/alert/AlertContext';
 
 const EditNote = (props) => {
   const { reference, referenceClose, selectedNote } = props;
   const [editNote, setEditNote] = useState(selectedNote);
   const context = useContext(noteContext);
   const { updateNote } = context;
+  const context2 = useContext(alertContext);
+  const { showAlert } = context2;
   const [titleError, setTitleError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
 
@@ -48,6 +51,7 @@ const EditNote = (props) => {
         editNote.tag
       );
       referenceClose.current.click();
+      showAlert('Note edited successfully', 'success');
     }
   };
 

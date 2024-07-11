@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useContext } from 'react';
 import noteContext from '../context/notes/NoteContext';
 
-const AddNote = () => {
+const AddNote = (props) => {
   const context = useContext(noteContext);
   const { addNote } = context;
+  const { showAlert } = props;
   const [title, setTitle] = useState('');
   const [titleError, setTitleError] = useState('');
   const [description, setDescription] = useState('');
@@ -60,6 +61,7 @@ const AddNote = () => {
     }
     if (isValid) {
       addNote(title, description, tag);
+      showAlert('Notes has been added', 'success');
       setTitle('');
       setDescription('');
       setTag('');
