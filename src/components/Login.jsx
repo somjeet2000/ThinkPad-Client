@@ -6,7 +6,7 @@ import Alert from './Alert';
 
 const Login = () => {
   const context = useContext(authContext);
-  const { loginUser } = context;
+  const { loginUser, getUserData } = context;
   const context2 = useContext(alertContext);
   const { alert, showAlert } = context2;
   const [email, setEmail] = useState('');
@@ -39,7 +39,7 @@ const Login = () => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let isValid = true;
@@ -58,8 +58,11 @@ const Login = () => {
       isValid = false;
     }
     if (isValid) {
-      loginUser(email, password, navigate);
-      showAlert('User LoggedIn successfully', 'success');
+      const loginSuccess = await loginUser(email, password, navigate);
+      if (loginSuccess) {
+        await getUserData();
+        showAlert('User LoggedIn successfully', 'success');
+      }
     }
   };
 
@@ -67,7 +70,7 @@ const Login = () => {
     <>
       <Alert alert={alert} />
       <div className="container my-3">
-        <h2 className="text-center">Login</h2>
+        <h2 className="text-center">Login to continue in ThinkPad</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="exampleInputEmail1" className="form-label">

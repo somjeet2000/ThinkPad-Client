@@ -117,13 +117,14 @@ const EditNote = (props) => {
                   <label htmlFor="description" className="form-label">
                     Description
                   </label>
-                  <input
+                  <textarea
                     type="text"
                     className="form-control"
                     id="description"
                     name="description"
                     value={editNote.description}
                     onChange={handleChange}
+                    rows="4"
                   />
                 </div>
                 <p style={{ color: '#bf2d31', fontWeight: '500' }}>

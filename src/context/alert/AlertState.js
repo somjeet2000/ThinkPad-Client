@@ -11,7 +11,7 @@ function AlertState(props) {
     });
     setTimeout(() => {
       setAlert(null);
-    }, 1500);
+    }, 3000);
   };
 
   return (

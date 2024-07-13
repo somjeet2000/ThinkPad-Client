@@ -81,7 +81,9 @@ const Signup = () => {
     <>
       <Alert alert={alert} />
       <div className="container my-3">
-        <h2 className="text-center">Register</h2>
+        <h2 className="text-center">
+          Register Yourself to continue in ThinkPad
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="exampleInputName1" className="form-label">

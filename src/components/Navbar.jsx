@@ -1,14 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import authContext from '../context/authentication/AuthenticationContext';
+import alertContext from '../context/alert/AlertContext';
+import Logo from './Logo.png';
 
 const Navbar = () => {
   let location = useLocation();
+  const navigate = useNavigate();
+  const host = 'http://localhost:5000';
+  const context = useContext(authContext);
+  const { loggedinUserName } = context;
+  const alertcontext = useContext(alertContext);
+  const { showAlert } = alertcontext;
+  const [name, setName] = useState(loggedinUserName);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+    showAlert('User Logged Out Successfully', 'success');
+  };
+
+  const getUserData = async () => {
+    const response = await fetch(`${host}/api/auth/getuser`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': localStorage.getItem('token'),
+      },
+    });
+    const responseJSON = await response.json();
+    setName(responseJSON.name);
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      getUserData();
+    }
+  }, [loggedinUserName]);
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            iNoteBook
+            <img
+              src={Logo}
+              className="img-fluid rounded mx-2"
+              style={{ height: '2.5rem', width: '6rem' }}
+              alt="ThinkPad"
+            />
           </Link>
           <button
             className="navbar-toggler"
@@ -44,49 +85,34 @@ const Navbar = () => {
                   About
                 </Link>
               </li>
-              {/* <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Dropdown
-              </a>
-              <ul className="dropdown-menu">
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Action
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Another action
-                  </a>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Something else here
-                  </a>
-                </li>
-              </ul>
-            </li> */}
-              {/* <li className="nav-item">
-              <a className="nav-link disabled" aria-disabled="true">
-                Disabled
-              </a>
-            </li> */}
             </ul>
-            <Link className="btn btn-primary mx-2" to="/login" role="button">
-              Login
-            </Link>
-            <Link className="btn btn-primary mx-2" to="/signup" role="button">
-              Signup
-            </Link>
+            {!localStorage.getItem('token') ? (
+              <div className="d-flex">
+                <Link
+                  className="btn btn-primary mx-2"
+                  to="/login"
+                  role="button"
+                >
+                  Login
+                </Link>
+                <Link
+                  className="btn btn-primary mx-2"
+                  to="/signup"
+                  role="button"
+                >
+                  Signup
+                </Link>
+              </div>
+            ) : (
+              <div>
+                <button disabled className="btn btn-primary mx-2">
+                  Hello, {name}
+                </button>
+                <button className="btn btn-primary mx-2" onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </nav>

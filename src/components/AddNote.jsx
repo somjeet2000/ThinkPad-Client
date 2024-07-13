@@ -61,7 +61,7 @@ const AddNote = (props) => {
     }
     if (isValid) {
       addNote(title, description, tag);
-      showAlert('Notes has been added', 'success');
+      showAlert('Note has been added', 'success');
       setTitle('');
       setDescription('');
       setTag('');
@@ -91,13 +91,14 @@ const AddNote = (props) => {
           <label htmlFor="description" className="form-label">
             Description
           </label>
-          <input
+          <textarea
             type="text"
             className="form-control"
             id="description"
             name="description"
             onChange={handleChange}
             value={description}
+            rows="4"
           />
         </div>
         <p style={{ color: '#bf2d31', fontWeight: '500' }}>

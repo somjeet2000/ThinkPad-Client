@@ -16,7 +16,7 @@ const NoteItem = (props) => {
   };
 
   return (
-    <div className="col-md-3">
+    <div className="col-md-6">
       <div className="card my-3">
         <div className="card-body">
           <h5 className="card-title">{notes.title}</h5>
