@@ -25,6 +25,7 @@ const Notes = () => {
   useEffect(() => {
     if (localStorage.getItem('token')) {
       getAllNotes();
+      // eslint-disable-next-line
     } else {
       navigate('/login');
     }

@@ -12,7 +12,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const context = useContext(authContext);
-  const { registerUser } = context;
+  const { registerUser, getUserData } = context;
   const context2 = useContext(alertContext);
   const { alert, showAlert } = context2;
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ const Signup = () => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let isValid = true;
@@ -72,8 +72,16 @@ const Signup = () => {
       isValid = false;
     }
     if (isValid) {
-      registerUser(userName, email, password, navigate);
-      showAlert('User created successfully', 'success');
+      const registerSuccess = await registerUser(
+        userName,
+        email,
+        password,
+        navigate
+      );
+      if (registerSuccess) {
+        await getUserData();
+        showAlert('User created successfully', 'success');
+      }
     }
   };
 

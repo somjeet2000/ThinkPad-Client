@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import noteContext from '../context/notes/NoteContext';
 import alertContext from '../context/alert/AlertContext';
 
@@ -8,11 +8,21 @@ const NoteItem = (props) => {
   const { deleteNote } = context;
   const context2 = useContext(alertContext);
   const { showAlert } = context2;
+  const [showPrompt, setShowPrompt] = useState(false);
 
   const handleClickDelete = (event) => {
     event.preventDefault();
+    setShowPrompt(true);
+  };
+
+  const handleConfirm = () => {
     deleteNote(notes._id);
+    setShowPrompt(false);
     showAlert('Note has been deleted', 'success');
+  };
+
+  const handleCancel = () => {
+    setShowPrompt(false);
   };
 
   return (
@@ -36,6 +46,20 @@ const NoteItem = (props) => {
               }}
             ></i>
           </div>
+          {showPrompt && (
+            <div className="prompt my-2">
+              <p>Are you sure want to delete the note ?</p>
+              <button
+                className="btn btn-success me-md-2"
+                onClick={handleCancel}
+              >
+                No
+              </button>
+              <button className="btn btn-danger" onClick={handleConfirm}>
+                Yes
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

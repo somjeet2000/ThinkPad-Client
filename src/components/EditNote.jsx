@@ -124,7 +124,7 @@ const EditNote = (props) => {
                     name="description"
                     value={editNote.description}
                     onChange={handleChange}
-                    rows="4"
+                    rows="3"
                   />
                 </div>
                 <p style={{ color: '#bf2d31', fontWeight: '500' }}>

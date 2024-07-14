@@ -17,6 +17,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    setName('');
     navigate('/login');
     showAlert('User Logged Out Successfully', 'success');
   };
@@ -37,7 +38,7 @@ const Navbar = () => {
     if (localStorage.getItem('token')) {
       getUserData();
     }
-  }, [loggedinUserName]);
+  }, [loggedinUserName, setName]);
 
   return (
     <div>
@@ -105,7 +106,7 @@ const Navbar = () => {
               </div>
             ) : (
               <div>
-                <button disabled className="btn btn-primary mx-2">
+                <button disabled className="btn btn-info mx-2">
                   Hello, {name}
                 </button>
                 <button className="btn btn-primary mx-2" onClick={handleLogout}>

@@ -98,7 +98,7 @@ const AddNote = (props) => {
             name="description"
             onChange={handleChange}
             value={description}
-            rows="4"
+            rows="3"
           />
         </div>
         <p style={{ color: '#bf2d31', fontWeight: '500' }}>

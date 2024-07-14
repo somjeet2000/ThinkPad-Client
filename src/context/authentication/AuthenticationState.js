@@ -23,12 +23,14 @@ function AuthenticationState(props) {
       // Redirect to Home
       localStorage.setItem('token', responseJSON.authToken);
       navigate('/');
+      return true;
     } else {
       // alert(responseJSON.error);
       showAlert(
         'User with this email already exists. Please enter an unique email.',
         'danger'
       );
+      return false;
     }
   };
 
