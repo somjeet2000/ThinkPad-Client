@@ -11,7 +11,7 @@ const About = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    fetch('http://localhost:5000/api/feedback/submitFeedback', {
+    fetch('https://thinkpadserver.onrender.com/api/feedback/submitFeedback', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

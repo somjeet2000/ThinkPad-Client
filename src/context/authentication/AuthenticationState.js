@@ -3,7 +3,7 @@ import authContext from './AuthenticationContext';
 import alertContext from '../alert/AlertContext';
 
 function AuthenticationState(props) {
-  const host = 'http://localhost:5000';
+  const host = 'https://thinkpadserver.onrender.com';
   const context = useContext(alertContext);
   const { showAlert } = context;
   const [loggedinUserName, setLoggedinUserName] = useState('');
