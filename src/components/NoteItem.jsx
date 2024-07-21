@@ -55,7 +55,7 @@ const NoteItem = (props) => {
               >
                 No
               </button>
-              <button className="btn btn-danger" onClick={handleConfirm}>
+              <button className="btn btn-danger mx-2" onClick={handleConfirm}>
                 Yes
               </button>
             </div>

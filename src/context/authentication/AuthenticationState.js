@@ -22,6 +22,7 @@ function AuthenticationState(props) {
     if (responseJSON.success) {
       // Redirect to Home
       localStorage.setItem('token', responseJSON.authToken);
+      showAlert('Please wait! Redirecting to home...', 'info');
       navigate('/');
       return true;
     } else {
