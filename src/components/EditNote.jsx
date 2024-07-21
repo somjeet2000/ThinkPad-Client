@@ -21,7 +21,7 @@ const EditNote = (props) => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value);
+
     setTitleError('');
     setDescriptionError('');
     setEditNote({ ...editNote, [name]: value });

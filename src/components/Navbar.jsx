@@ -31,6 +31,7 @@ const Navbar = () => {
       },
     });
     const responseJSON = await response.json();
+    // loggedinUserName = responseJSON.name;
     setName(responseJSON.name);
   };
 
@@ -38,7 +39,7 @@ const Navbar = () => {
     if (localStorage.getItem('token')) {
       getUserData();
     }
-  }, [loggedinUserName, setName]);
+  }, [loggedinUserName, getUserData]);
 
   return (
     <div>
@@ -107,7 +108,7 @@ const Navbar = () => {
             ) : (
               <div>
                 <button disabled className="btn btn-info mx-2">
-                  Hello, {name}
+                  Hello, {loggedinUserName || name}
                 </button>
                 <button className="btn btn-primary mx-2" onClick={handleLogout}>
                   Logout

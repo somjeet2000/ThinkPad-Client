@@ -10,6 +10,9 @@ const About = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    // Scroll the window to the top
+    window.scrollTo(0, 0);
+    showAlert('Please wait! We are submitting your feedback...', 'info');
 
     fetch('https://thinkpadserver.onrender.com/api/feedback/submitFeedback', {
       method: 'POST',
@@ -20,6 +23,9 @@ const About = () => {
     })
       .then((response) => response.text())
       .then((data) => {
+        // Clear input fields
+        setUseFrequency('');
+        setFeedback('');
         showAlert(data, 'success');
       })
       .catch((error) => {

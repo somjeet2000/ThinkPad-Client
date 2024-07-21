@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import authContext from '../context/authentication/AuthenticationContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import alertContext from '../context/alert/AlertContext';
 import Alert from './Alert';
 
@@ -17,7 +17,6 @@ const Login = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value);
 
     switch (name) {
       case 'email':
@@ -58,10 +57,11 @@ const Login = () => {
       isValid = false;
     }
     if (isValid) {
+      showAlert('Please wait! Verifying your credentials...', 'info');
       const loginSuccess = await loginUser(email, password, navigate);
       if (loginSuccess) {
-        await getUserData();
         showAlert('User LoggedIn successfully', 'success');
+        await getUserData();
       }
     }
   };
@@ -104,6 +104,9 @@ const Login = () => {
             />
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{passwordError}</p>
+          <p>
+            New User? <Link to="/signup">Register here</Link>
+          </p>
           <button type="submit" className="btn btn-primary">
             Login
           </button>

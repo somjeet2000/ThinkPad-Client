@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import authContext from '../context/authentication/AuthenticationContext';
 import alertContext from '../context/alert/AlertContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Alert from './Alert';
 
 const Signup = () => {
@@ -19,7 +19,6 @@ const Signup = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value);
 
     switch (name) {
       case 'userName':
@@ -72,6 +71,7 @@ const Signup = () => {
       isValid = false;
     }
     if (isValid) {
+      showAlert('Please wait! Redirecting to home...', 'info');
       const registerSuccess = await registerUser(
         userName,
         email,
@@ -140,6 +140,9 @@ const Signup = () => {
             />
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{passwordError}</p>
+          <p>
+            Already Registered? <Link to="/login">Login here</Link>
+          </p>
           <button type="submit" className="btn btn-primary">
             Register
           </button>

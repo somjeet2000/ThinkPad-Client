@@ -48,6 +48,7 @@ function AuthenticationState(props) {
     if (responseJSON.success) {
       // Redirect to Home
       localStorage.setItem('token', responseJSON.authToken);
+      showAlert('Credentials Verified! Redirecting to home...', 'info');
       navigate('/');
       return true;
     } else {
