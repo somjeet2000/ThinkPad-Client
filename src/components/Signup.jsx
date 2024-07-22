@@ -11,6 +11,14 @@ const Signup = () => {
   const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  // Added for the functionality of forgot password -- Start --
+  const [securityQuestion, setSecurityQuestion] = useState(
+    "What is your mother's maiden name?"
+  );
+  const [securityQuestionError, setSecurityQuestionError] = useState('');
+  const [securityAnswer, setSecurityAnswer] = useState('');
+  const [securityAnswerError, setSecurityAnswerError] = useState('');
+  // Added for the functionality of forgot password -- End --
   const context = useContext(authContext);
   const { registerUser, getUserData } = context;
   const context2 = useContext(alertContext);
@@ -47,6 +55,26 @@ const Signup = () => {
       default:
         break;
     }
+    // Added for the functionality of forgot password
+    switch (name) {
+      case 'securityQuestion':
+        setSecurityQuestionError('');
+        setSecurityQuestion(value);
+        break;
+
+      default:
+        break;
+    }
+
+    switch (name) {
+      case 'securityAnswer':
+        setSecurityAnswerError('');
+        setSecurityAnswer(value);
+        break;
+
+      default:
+        break;
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -68,6 +96,15 @@ const Signup = () => {
       isValid = false;
     } else if (password.length < 5) {
       setPasswordError('Password must be atleast of 5 characters');
+      isValid = false;
+    }
+    // Added for the functionality of forgot password
+    if (securityQuestion.length === 0) {
+      setSecurityQuestionError('You need to select atleast one question');
+      isValid = false;
+    }
+    if (securityAnswer.length === 0) {
+      setSecurityAnswerError('Answer should not be blank');
       isValid = false;
     }
     if (isValid) {
@@ -121,9 +158,9 @@ const Signup = () => {
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
             />
-            <div id="emailHelp" className="form-text">
+            {/* <div id="emailHelp" className="form-text">
               We'll never share your email with anyone else.
-            </div>
+            </div> */}
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{emailError}</p>
           <div className="mb-3">
@@ -140,6 +177,59 @@ const Signup = () => {
             />
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{passwordError}</p>
+          {/*
+          Implement the functionality for Forget Password - Bug 10001
+          ---START---
+          */}
+          <div className="mb-3">
+            <label className="form-label">Select your question</label>
+            <select
+              className="form-select"
+              aria-label="Default select example"
+              name="securityQuestion"
+              value={securityQuestion}
+              onChange={handleChange}
+            >
+              <option value="What is your mother's maiden name?">
+                What is your mother's maiden name?
+              </option>
+              <option value="What was the name of your first pet?">
+                What was the name of your first pet?
+              </option>
+              <option value="What was the name of your elementary school?">
+                What was the name of your elementary school?
+              </option>
+              <option value="What is the name of the town where you were born?">
+                What is the name of the town where you were born?
+              </option>
+              <option value="What was your childhood nickname?">
+                What was your childhood nickname?
+              </option>
+            </select>
+          </div>
+          <p style={{ color: '#bf2d31', fontWeight: '500' }}>
+            {securityQuestionError}
+          </p>
+          <div className="mb-3">
+            <label htmlFor="exampleInputSecurityAnswer" className="form-label">
+              Your Answer
+            </label>
+            <input
+              type="text"
+              name="securityAnswer"
+              value={securityAnswer}
+              onChange={handleChange}
+              className="form-control"
+              id="exampleInputSecurityAnswer"
+            />
+          </div>
+          <p style={{ color: '#bf2d31', fontWeight: '500' }}>
+            {securityAnswerError}
+          </p>
+          {/*
+          Implement the functionality for Forget Password - Bug 10001
+          ---END---
+          */}
           <p>
             Already Registered? <Link to="/login">Login here</Link>
           </p>
