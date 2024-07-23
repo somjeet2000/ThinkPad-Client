@@ -8,6 +8,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import AuthenticationState from './context/authentication/AuthenticationState';
 import AlertState from './context/alert/AlertState';
+import ForgotPassword from './components/ForgotPassword';
 
 /*
 Very Important:-
@@ -26,11 +27,12 @@ function App() {
           <AuthenticationState>
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Navbar />}>
+                <Route path='/' element={<Navbar />}>
                   <Route index element={<Home />} />
-                  <Route path="about" element={<About />} />
-                  <Route path="login" element={<Login />} />
-                  <Route path="signup" element={<Signup />} />
+                  <Route path='about' element={<About />} />
+                  <Route path='login' element={<Login />} />
+                  <Route path='signup' element={<Signup />} />
+                  <Route path='forgotpassword' element={<ForgotPassword />} />
                 </Route>
               </Routes>
             </BrowserRouter>

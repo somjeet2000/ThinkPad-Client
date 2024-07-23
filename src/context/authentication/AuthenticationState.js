@@ -3,19 +3,32 @@ import authContext from './AuthenticationContext';
 import alertContext from '../alert/AlertContext';
 
 function AuthenticationState(props) {
-  const host = 'https://thinkpadserver.onrender.com';
+  const host = 'http://localhost:5000';
   const context = useContext(alertContext);
   const { showAlert } = context;
   const [loggedinUserName, setLoggedinUserName] = useState('');
 
   // Register User
-  const registerUser = async (userName, email, password, navigate) => {
+  const registerUser = async (
+    userName,
+    email,
+    password,
+    securityQuestion,
+    securityAnswer,
+    navigate
+  ) => {
     const response = await fetch(`${host}/api/auth/createuser`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: userName, email, password }),
+      body: JSON.stringify({
+        name: userName,
+        email,
+        password,
+        securityQuestion,
+        securityAnswer,
+      }),
     });
     const responseJSON = await response.json();
     console.log(responseJSON);
