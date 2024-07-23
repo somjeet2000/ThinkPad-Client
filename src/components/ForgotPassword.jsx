@@ -120,12 +120,19 @@ const ForgotPassword = () => {
 
   const handlePasswordChangeSubmit = async (event) => {
     event.preventDefault();
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])(?=.{8,})/;
     let isValid = true;
     if (newPassword.length === 0) {
       setNewPasswordError('Password cannot be empty');
       isValid = false;
-    } else if (newPassword.length < 5) {
-      setNewPasswordError('Password must be atleast of 5 characters');
+    } else if (newPassword.length < 8) {
+      setNewPasswordError('Password must be atleast of 8 characters');
+      isValid = false;
+    } else if (!passwordRegex.test(newPassword)) {
+      setNewPasswordError(
+        'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character.'
+      );
       isValid = false;
     }
     // If isValid is true,
@@ -155,42 +162,42 @@ const ForgotPassword = () => {
   return (
     <>
       <Alert alert={alert} />
-      <div className='container my-3'>
-        <h3 className='text-center my-3'>Reset Your Password here 🤞</h3>
+      <div className="container my-3">
+        <h3 className="text-center my-3">Reset Your Password here 🤞</h3>
         <form onSubmit={handleSubmit}>
-          <div className='mb-2 row'>
-            <label htmlFor='email' className='col-sm-2 col-form-label'>
+          <div className="mb-2 row">
+            <label htmlFor="email" className="col-sm-2 col-form-label">
               Email
             </label>
-            <div className='col-sm-10'>
+            <div className="col-sm-10">
               <input
-                type='email'
-                name='email'
-                className='form-control'
-                id='email'
+                type="email"
+                name="email"
+                className="form-control"
+                id="email"
                 value={email}
                 onChange={handleChange}
                 disabled={disabled}
               />
             </div>
           </div>
-          <div className='row'>
-            <div className='col-sm-2'></div>
+          <div className="row">
+            <div className="col-sm-2"></div>
             <p
-              className='col-sm-10 my-2'
+              className="col-sm-10 my-2"
               style={{ color: '#bf2d31', fontWeight: '500' }}
             >
               {emailError}
             </p>
           </div>
-          <div className='mb-4 row'>
-            <label className='col-sm-2 col-form-label'>
+          <div className="mb-4 row">
+            <label className="col-sm-2 col-form-label">
               Select your question
             </label>
-            <div className='col-sm-10'>
+            <div className="col-sm-10">
               <select
-                className='form-select'
-                name='securityQuestion'
+                className="form-select"
+                name="securityQuestion"
                 value={securityQuestion}
                 onChange={handleChange}
                 disabled={disabled}
@@ -198,55 +205,55 @@ const ForgotPassword = () => {
                 <option value="What is your mother's maiden name?">
                   What is your mother's maiden name?
                 </option>
-                <option value='What was the name of your first pet?'>
+                <option value="What was the name of your first pet?">
                   What was the name of your first pet?
                 </option>
-                <option value='What was the name of your elementary school?'>
+                <option value="What was the name of your elementary school?">
                   What was the name of your elementary school?
                 </option>
-                <option value='What is the name of the town where you were born?'>
+                <option value="What is the name of the town where you were born?">
                   What is the name of the town where you were born?
                 </option>
-                <option value='What was your childhood nickname?'>
+                <option value="What was your childhood nickname?">
                   What was your childhood nickname?
                 </option>
               </select>
             </div>
           </div>
-          <div className='mb-2 row'>
+          <div className="mb-2 row">
             <label
-              htmlFor='exampleInputSecurityAnswer'
-              className='col-sm-2 col-form-label'
+              htmlFor="exampleInputSecurityAnswer"
+              className="col-sm-2 col-form-label"
             >
               Your Answer
             </label>
-            <div className='col-sm-10'>
+            <div className="col-sm-10">
               <input
-                type='password'
-                name='securityAnswer'
-                className='form-control'
-                id='exampleInputSecurityAnswer'
+                type="password"
+                name="securityAnswer"
+                className="form-control"
+                id="exampleInputSecurityAnswer"
                 value={securityAnswer}
                 onChange={handleChange}
                 disabled={disabled}
               />
             </div>
           </div>
-          <div className='row'>
-            <div className='col-sm-2'></div>
+          <div className="row">
+            <div className="col-sm-2"></div>
             <p
-              className='col-sm-10 my-2'
+              className="col-sm-10 my-2"
               style={{ color: '#bf2d31', fontWeight: '500' }}
             >
               {securityAnswerError}
             </p>
           </div>
-          <div className='row'>
-            <div className='col-sm-2'></div>
-            <div className='col-sm-10'>
+          <div className="row">
+            <div className="col-sm-2"></div>
+            <div className="col-sm-10">
               <button
-                type='submit'
-                className='btn btn-primary'
+                type="submit"
+                className="btn btn-primary"
                 disabled={disabled}
               >
                 Submit
@@ -255,40 +262,40 @@ const ForgotPassword = () => {
           </div>
         </form>
         {showResetForm && (
-          <div className='my-3'>
-            <h4 className='text-center'>Enter the New Password 👇</h4>
+          <div className="my-3">
+            <h4 className="text-center">Enter the New Password 👇</h4>
             <form onSubmit={handlePasswordChangeSubmit}>
-              <div className='row'>
+              <div className="row">
                 <label
-                  htmlFor='inputPassword'
-                  className='col-sm-2 col-form-label'
+                  htmlFor="inputPassword"
+                  className="col-sm-2 col-form-label"
                 >
                   Password
                 </label>
-                <div className='col-sm-10'>
+                <div className="col-sm-10">
                   <input
-                    type='password'
-                    className='form-control'
-                    id='inputPassword'
-                    name='password'
+                    type="password"
+                    className="form-control"
+                    id="inputPassword"
+                    name="password"
                     value={newPassword}
                     onChange={handleChange}
                   />
                 </div>
               </div>
-              <div className='row'>
-                <div className='col-sm-2'></div>
+              <div className="row">
+                <div className="col-sm-2"></div>
                 <p
-                  className='col-sm-10 my-2'
+                  className="col-sm-10 my-2"
                   style={{ color: '#bf2d31', fontWeight: '500' }}
                 >
                   {newPasswordError}
                 </p>
               </div>
-              <div className='row'>
-                <div className='col-sm-2'></div>
-                <div className='col-sm-10'>
-                  <button type='submit' className='btn btn-primary'>
+              <div className="row">
+                <div className="col-sm-2"></div>
+                <div className="col-sm-10">
+                  <button type="submit" className="btn btn-primary">
                     Reset Password
                   </button>
                 </div>

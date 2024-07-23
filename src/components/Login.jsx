@@ -41,6 +41,9 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Regular expression for password validation
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])(?=.{8,})/;
     let isValid = true;
     if (email.length === 0) {
       setEmailError('Email cannot be empty');
@@ -52,8 +55,13 @@ const Login = () => {
     if (password.length === 0) {
       setPasswordError('Password cannot be empty');
       isValid = false;
-    } else if (password.length < 5) {
-      setPasswordError('Password must be atleast of 5 characters');
+    } else if (password.length < 8) {
+      setPasswordError('Password must be atleast of 8 characters');
+      isValid = false;
+    } else if (!passwordRegex.test(password)) {
+      setPasswordError(
+        'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character.'
+      );
       isValid = false;
     }
     if (isValid) {
@@ -69,48 +77,45 @@ const Login = () => {
   return (
     <>
       <Alert alert={alert} />
-      <div className='container my-3'>
-        <h2 className='text-center'>Login to continue in ThinkPad</h2>
+      <div className="container my-3">
+        <h2 className="text-center">Login to continue in ThinkPad</h2>
         <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
-            <label htmlFor='exampleInputEmail1' className='form-label'>
+          <div className="mb-3">
+            <label htmlFor="exampleInputEmail1" className="form-label">
               Email address
             </label>
             <input
-              type='email'
-              name='email'
+              type="email"
+              name="email"
               value={email}
               onChange={handleChange}
-              className='form-control'
-              id='exampleInputEmail1'
-              aria-describedby='emailHelp'
+              className="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
             />
-            <div id='emailHelp' className='form-text'>
-              We'll never share your email with anyone else.
-            </div>
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{emailError}</p>
-          <div className='mb-3'>
-            <label htmlFor='exampleInputPassword1' className='form-label'>
+          <div className="mb-3">
+            <label htmlFor="exampleInputPassword1" className="form-label">
               Password
             </label>
             <input
-              type='password'
-              name='password'
+              type="password"
+              name="password"
               value={password}
               onChange={handleChange}
-              className='form-control'
-              id='exampleInputPassword1'
+              className="form-control"
+              id="exampleInputPassword1"
             />
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{passwordError}</p>
           <p>
-            Forgot Password? <Link to='/forgotpassword'>Click here</Link>
+            Forgot Password? <Link to="/forgotpassword">Click here</Link>
           </p>
           <p>
-            New User? <Link to='/signup'>Register here</Link>
+            New User? <Link to="/signup">Register here</Link>
           </p>
-          <button type='submit' className='btn btn-primary'>
+          <button type="submit" className="btn btn-primary">
             Login
           </button>
         </form>
