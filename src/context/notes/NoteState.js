@@ -32,6 +32,9 @@ const NoteState = (props) => {
     const addNoteJSON = await response.json();
     let newNote = addNoteJSON;
     setNotes(notes.concat(newNote));
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight);
+    }, 0);
   };
 
   // Delete a Note

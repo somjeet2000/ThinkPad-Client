@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import authContext from '../context/authentication/AuthenticationContext';
 import { Link, useNavigate } from 'react-router-dom';
 import alertContext from '../context/alert/AlertContext';
@@ -14,6 +14,13 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    if (password.length !== 0) {
+      setPasswordVisible(!passwordVisible);
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -77,45 +84,56 @@ const Login = () => {
   return (
     <>
       <Alert alert={alert} />
-      <div className="container my-3">
-        <h2 className="text-center">Login to continue in ThinkPad</h2>
+      <div className='container my-3'>
+        <h2 className='text-center'>Login to continue in ThinkPad</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="exampleInputEmail1" className="form-label">
+          <div className='mb-3'>
+            <label htmlFor='exampleInputEmail1' className='form-label'>
               Email address
             </label>
             <input
-              type="email"
-              name="email"
+              type='email'
+              name='email'
               value={email}
               onChange={handleChange}
-              className="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
+              className='form-control'
+              id='exampleInputEmail1'
+              aria-describedby='emailHelp'
             />
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{emailError}</p>
-          <div className="mb-3">
-            <label htmlFor="exampleInputPassword1" className="form-label">
+          <div className='mb-3'>
+            <label htmlFor='exampleInputPassword1' className='form-label'>
               Password
             </label>
             <input
-              type="password"
-              name="password"
+              type={passwordVisible ? 'text' : 'password'}
+              name='password'
               value={password}
               onChange={handleChange}
-              className="form-control"
-              id="exampleInputPassword1"
+              className='form-control d-inline'
+              id='exampleInputPassword1'
             />
+            {password && (
+              <i
+                className={
+                  passwordVisible
+                    ? 'fa-regular fa-eye-slash'
+                    : 'fa-regular fa-eye'
+                }
+                style={{ marginLeft: '-30px', cursor: 'pointer' }}
+                onClick={togglePasswordVisibility}
+              ></i>
+            )}
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{passwordError}</p>
           <p>
-            Forgot Password? <Link to="/forgotpassword">Click here</Link>
+            Forgot Password? <Link to='/forgotpassword'>Click here</Link>
           </p>
           <p>
-            New User? <Link to="/signup">Register here</Link>
+            New User? <Link to='/signup'>Register here</Link>
           </p>
-          <button type="submit" className="btn btn-primary">
+          <button type='submit' className='btn btn-primary'>
             Login
           </button>
         </form>

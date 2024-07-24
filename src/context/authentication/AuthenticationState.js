@@ -17,6 +17,7 @@ function AuthenticationState(props) {
     securityAnswer,
     navigate
   ) => {
+    window.scrollTo(0, 0);
     const response = await fetch(`${host}/api/auth/createuser`, {
       method: 'POST',
       headers: {
@@ -50,6 +51,7 @@ function AuthenticationState(props) {
 
   // Login User
   const loginUser = async (email, password, navigate) => {
+    window.scrollTo(0, 0);
     const response = await fetch(`${host}/api/auth/login`, {
       method: 'POST',
       headers: {

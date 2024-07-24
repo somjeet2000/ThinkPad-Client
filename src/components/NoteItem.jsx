@@ -26,20 +26,22 @@ const NoteItem = (props) => {
   };
 
   return (
-    <div className="col-md-6">
-      <div className="card my-3">
-        <div className="card-body">
-          <h5 className="card-title">{notes.title}</h5>
-          <p className="card-text">{notes.description}</p>
-          <p className="btn btn-secondary">{notes.tag}</p>
+    <div className='col-md-4'>
+      <div className='card my-3'>
+        <div className='card-body'>
+          <h5 className='card-title'>{notes.title}</h5>
+          <p className='card-text' style={{ whiteSpace: 'pre-wrap' }}>
+            {notes.description}
+          </p>
+          <p className='btn btn-secondary'>{notes.tag}</p>
           <div>
             <i
-              className="fa-solid fa-trash mx-2"
+              className='fa-solid fa-trash mx-2'
               style={{ cursor: 'pointer' }}
               onClick={handleClickDelete}
             ></i>
             <i
-              className="fa-solid fa-pen-to-square mx-2"
+              className='fa-solid fa-pen-to-square mx-2'
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 updateNote(notes);
@@ -47,15 +49,15 @@ const NoteItem = (props) => {
             ></i>
           </div>
           {showPrompt && (
-            <div className="prompt my-2">
+            <div className='prompt my-2'>
               <p>Are you sure want to delete the note ?</p>
               <button
-                className="btn btn-success me-md-2"
+                className='btn btn-success me-md-2'
                 onClick={handleCancel}
               >
                 No
               </button>
-              <button className="btn btn-danger mx-2" onClick={handleConfirm}>
+              <button className='btn btn-danger mx-2' onClick={handleConfirm}>
                 Yes
               </button>
             </div>
