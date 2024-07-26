@@ -47,6 +47,7 @@ const NoteState = (props) => {
       },
     });
     const deleteNote = await response.json();
+    console.log(deleteNote);
     console.log(`Deleting the Note with id : ${id}`);
     let newNotesAfterDeletion = notes.filter((notes) => {
       return notes._id !== id;
@@ -65,7 +66,7 @@ const NoteState = (props) => {
       body: JSON.stringify({ title, description, tag }),
     });
     const editNoteResponse = await response.json();
-
+    console.log(editNoteResponse);
     // Logic to update the values in Client side
     /*
     We can't set the state variable directly like this way. Instead we have to create a new variable and when the state variable has been updated, the new variable will also updated automatically.

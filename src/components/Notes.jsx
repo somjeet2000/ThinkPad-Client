@@ -28,12 +28,37 @@ const Notes = () => {
 
   // To display the notes for the user.
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      getAllNotes();
-      // eslint-disable-next-line
+    const token = localStorage.getItem('token');
+    const tokenSetTime = localStorage.getItem('tokenSetTime');
+    if (token && tokenSetTime) {
+      const currentTime = Date.now();
+      const tokenAge = currentTime - parseInt(tokenSetTime, 10);
+      if (tokenAge > 3600000) {
+        // 1 hour = 3600000 ms
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenSetTime');
+        navigate('/login');
+      } else {
+        getAllNotes();
+        // eslint-disable-next-line
+      }
     } else {
       navigate('/login');
     }
+  }, [getAllNotes, navigate]);
+
+  useEffect(() => {
+    const resetTimer = () => {
+      localStorage.setItem('tokenSetTime', Date.now().toString());
+    };
+
+    window.addEventListener('mousemove', resetTimer);
+    window.addEventListener('keypress', resetTimer);
+
+    return () => {
+      window.removeEventListener('mousemove', resetTimer);
+      window.removeEventListener('keypress', resetTimer);
+    };
   }, []);
 
   useEffect(() => {

@@ -36,6 +36,7 @@ function AuthenticationState(props) {
     if (responseJSON.success) {
       // Redirect to Home
       localStorage.setItem('token', responseJSON.authToken);
+      localStorage.setItem('tokenSetTime', Date.now().toString());
       showAlert('Please wait! Redirecting to home...', 'info');
       navigate('/');
       return true;
@@ -64,6 +65,7 @@ function AuthenticationState(props) {
     if (responseJSON.success) {
       // Redirect to Home
       localStorage.setItem('token', responseJSON.authToken);
+      localStorage.setItem('tokenSetTime', Date.now().toString());
       showAlert('Credentials Verified! Redirecting to home...', 'info');
       navigate('/');
       return true;
