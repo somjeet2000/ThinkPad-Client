@@ -8,7 +8,7 @@ import Logo from './Logo.png';
 const Navbar = () => {
   let location = useLocation();
   const navigate = useNavigate();
-  const host = 'https://thinkpadserver.onrender.com';
+  const host = process.env.REACT_APP_THINKPAD_SERVER;
   const context = useContext(authContext);
   const { loggedinUserName } = context;
   const alertcontext = useContext(alertContext);

@@ -12,7 +12,7 @@ const ForgotPassword = () => {
   //   const [securityQuestionError, setSecurityQuestionError] = useState('');
   const [securityAnswer, setSecurityAnswer] = useState('');
   const [securityAnswerError, setSecurityAnswerError] = useState('');
-  const host = 'https://thinkpadserver.onrender.com';
+  const host = process.env.REACT_APP_THINKPAD_SERVER;
   const [showResetForm, setShowResetForm] = useState(false);
   const context = useContext(alertContext);
   const { alert, showAlert } = context;

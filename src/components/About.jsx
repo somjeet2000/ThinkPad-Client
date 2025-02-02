@@ -7,6 +7,7 @@ const About = () => {
   const [feedback, setFeedback] = useState('');
   const context = useContext(alertContext);
   const { alert, showAlert } = context;
+  const host = process.env.REACT_APP_THINKPAD_SERVER
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -14,7 +15,7 @@ const About = () => {
     window.scrollTo(0, 0);
     showAlert('Please wait! We are submitting your feedback...', 'info');
 
-    fetch('https://thinkpadserver.onrender.com/api/feedback/submitFeedback', {
+    fetch(`${host}/api/feedback/submitFeedback`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
