@@ -3,7 +3,7 @@ import authContext from './AuthenticationContext';
 import alertContext from '../alert/AlertContext';
 
 function AuthenticationState(props) {
-  const host = 'https://thinkpadserver.onrender.com';
+  const host = process.env.REACT_APP_THINKPAD_SERVER;
   const context = useContext(alertContext);
   const { showAlert } = context;
   const [loggedinUserName, setLoggedinUserName] = useState('');

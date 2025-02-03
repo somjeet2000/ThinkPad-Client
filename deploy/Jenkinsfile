@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    // Mention the Environment variables
+    environment {}
+
+    // Stages will run to build the pipeline
+    stages {
+
+        // Stage 1: Clean Workspace
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        // Stage 2: Code Checkout
+
+        // Stage 3: Static Code Analysis
+
+        // Stage 4: SonarQube Quality Gate
+
+        // Stage 5: Install Dependencies
+
+        // Stage 6: Build Application
+
+        // Stage 7: Deploy to Netlify
+
+    }
+
+    post {
+        success {
+            echo 'Deployment to Netlify Successful!'
+        }
+        failure {
+            echo 'Deployment failed. Check the logs.'
+        }
+    }
+}
