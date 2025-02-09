@@ -22,8 +22,14 @@ const EditNote = (props) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    setTitleError('');
-    setDescriptionError('');
+    if (name === 'title') {
+      setTitleError('');
+    } else if (name === 'description') {
+      setDescriptionError('');
+    }
+
+    // setTitleError('');
+    // setDescriptionError('');
     setEditNote({ ...editNote, [name]: value });
   };
 
@@ -62,50 +68,50 @@ const EditNote = (props) => {
   };
 
   return (
-    <div className="container">
+    <div className='container'>
       <button
         ref={reference}
-        type="button"
-        className="btn btn-primary d-none"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
+        type='button'
+        className='btn btn-primary d-none'
+        data-bs-toggle='modal'
+        data-bs-target='#exampleModal'
       >
         Launch modal
       </button>
 
       <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
+        className='modal fade'
+        id='exampleModal'
+        tabIndex='-1'
+        aria-labelledby='exampleModalLabel'
+        aria-hidden='true'
       >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">
+        <div className='modal-dialog'>
+          <div className='modal-content'>
+            <div className='modal-header'>
+              <h1 className='modal-title fs-5' id='exampleModalLabel'>
                 Edit Note
               </h1>
               <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
+                type='button'
+                className='btn-close'
+                data-bs-dismiss='modal'
+                aria-label='Close'
                 onClick={handleClick1}
               ></button>
             </div>
-            <div className="modal-body">
+            <div className='modal-body'>
               <form>
-                <div className="mb-3">
-                  <label htmlFor="title" className="form-label">
+                <div>
+                  <label htmlFor='title' className='form-label'>
                     Title
                   </label>
                   <input
-                    type="text"
-                    className="form-control"
-                    id="title"
-                    name="title"
-                    aria-describedby="emailHelp"
+                    type='text'
+                    className='form-control'
+                    id='title'
+                    name='title'
+                    aria-describedby='emailHelp'
                     value={editNote.title}
                     onChange={handleChange}
                   />
@@ -113,51 +119,64 @@ const EditNote = (props) => {
                 <p style={{ color: '#bf2d31', fontWeight: '500' }}>
                   {titleError}
                 </p>
-                <div className="mb-3">
-                  <label htmlFor="description" className="form-label">
+                <div>
+                  <label htmlFor='description' className='form-label'>
                     Description
                   </label>
                   <textarea
-                    type="text"
-                    className="form-control"
-                    id="description"
-                    name="description"
+                    type='text'
+                    className='form-control'
+                    id='description'
+                    name='description'
                     value={editNote.description}
                     onChange={handleChange}
-                    rows="3"
+                    rows='3'
                   />
                 </div>
                 <p style={{ color: '#bf2d31', fontWeight: '500' }}>
                   {descriptionError}
                 </p>
-                <div className="mb-3">
-                  <label htmlFor="tag" className="form-label">
+                <div>
+                  <label htmlFor='tag' className='form-label'>
                     Tag
                   </label>
-                  <input
+                  {/* <input
                     type="text"
                     className="form-control"
                     id="tag"
                     name="tag"
                     value={editNote.tag}
                     onChange={handleChange}
-                  />
+                  /> */}
+                  <select
+                    className='form-select'
+                    aria-label='Default select example'
+                    value={editNote.tag}
+                    onChange={handleChange}
+                    id='tag'
+                    name='tag'
+                  >
+                    <option value='Personal'>Personal</option>
+                    <option value='Education'>Education</option>
+                    <option value='Work'>Work</option>
+                    <option value='Others'>Others</option>
+                  </select>
                 </div>
               </form>
             </div>
-            <div className="modal-footer">
+            <div className='modal-footer'>
               <button
                 ref={referenceClose}
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
+                type='button'
+                className='btn btn-secondary'
+                data-bs-dismiss='modal'
                 onClick={handleClick1}
               >
                 Close
               </button>
               <button
-                type="button"
-                className="btn btn-primary"
+                type='button'
+                className='btn btn-primary'
                 onClick={handleClick}
               >
                 Update Note

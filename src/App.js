@@ -9,6 +9,7 @@ import Signup from './components/Signup';
 import AuthenticationState from './context/authentication/AuthenticationState';
 import AlertState from './context/alert/AlertState';
 import ForgotPassword from './components/ForgotPassword';
+import Profile from './components/Profile';
 
 /*
 Very Important:-
@@ -33,6 +34,7 @@ function App() {
                   <Route path='login' element={<Login />} />
                   <Route path='signup' element={<Signup />} />
                   <Route path='forgotpassword' element={<ForgotPassword />} />
+                  <Route path='profile' element={<Profile />} />
                 </Route>
               </Routes>
             </BrowserRouter>

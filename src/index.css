@@ -12,8 +12,12 @@ code {
     monospace;
 }
 
-* {
+/* * {
   font-family: 'Poppins', sans-serif
+} */
+
+body {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 /* Chrome, Safari, Edge, Opera */
