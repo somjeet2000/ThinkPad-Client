@@ -27,6 +27,7 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getUserData = async () => {
     const response = await fetch(`${host}/api/auth/getuser`, {
       method: 'POST',
@@ -35,6 +36,17 @@ const Navbar = () => {
         'auth-token': localStorage.getItem('token'),
       },
     });
+
+    if (response.status === 401) {
+      // User deleted, Handle Logout
+      localStorage.removeItem('token');
+      setName('');
+      navigate('/login');
+      showAlert(
+        'Your account no longer exists. Please log in again.',
+        'danger'
+      );
+    }
     const responseJSON = await response.json();
     // loggedinUserName = responseJSON.name;
     setName(responseJSON.name);
@@ -157,7 +169,7 @@ const Navbar = () => {
             {!localStorage.getItem('token') ? (
               <div className='d-flex'>
                 <Link
-                  className='btn btn-primary mx-2'
+                  className='btn btn-success mx-2'
                   to='/login'
                   role='button'
                 >
