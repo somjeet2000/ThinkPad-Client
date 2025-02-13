@@ -9,6 +9,7 @@ const Profile = () => {
   const { showAlert } = alertCtx;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+
   useEffect(() => {
     const fetchuser = async () => {
       try {

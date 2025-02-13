@@ -15,6 +15,8 @@ const Navbar = () => {
   const { showAlert } = alertcontext;
   const [name, setName] = useState(loggedinUserName);
   const [isOpen, setIsOpen] = useState(false);
+  const [searchTag, setSearchTag] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   // Ref for dropdown
   const dropdownRef = useRef(null);
