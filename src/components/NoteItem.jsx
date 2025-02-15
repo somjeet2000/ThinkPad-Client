@@ -52,13 +52,13 @@ const NoteItem = (props) => {
             <div className='prompt my-2'>
               <p>Are you sure want to delete the note ?</p>
               <button
-                className='btn btn-success me-md-2'
-                onClick={handleCancel}
+                className='btn btn-danger me-md-2'
+                onClick={handleConfirm}
               >
-                No
-              </button>
-              <button className='btn btn-danger mx-2' onClick={handleConfirm}>
                 Yes
+              </button>
+              <button className='btn btn-success mx-2' onClick={handleCancel}>
+                No
               </button>
             </div>
           )}

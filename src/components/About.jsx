@@ -7,7 +7,7 @@ const About = () => {
   const [feedback, setFeedback] = useState('');
   const context = useContext(alertContext);
   const { alert, showAlert } = context;
-  const host = process.env.REACT_APP_THINKPAD_SERVER
+  const host = process.env.REACT_APP_THINKPAD_SERVER;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -151,7 +151,7 @@ const About = () => {
               <label htmlFor='exampleInputUse' className='form-label'>
                 How often do you use our app ?
               </label>
-              <input
+              {/* <input
                 type='text'
                 className='form-control'
                 id='exampleInputUse'
@@ -159,7 +159,19 @@ const About = () => {
                 value={useFrequency}
                 onChange={(e) => setUseFrequency(e.target.value)}
                 required
-              />
+              /> */}
+              <select
+                className='form-select'
+                aria-label='Default select example'
+                value={useFrequency}
+                onChange={(e) => setUseFrequency(e.target.value)}
+              >
+                <option selected value='Everyday'>
+                  Everyday
+                </option>
+                <option value='Once-a-week'>Once-a-week</option>
+                <option value='Bi-weekly'>Bi-weekly</option>
+              </select>
             </div>
             <div className='mb-3'>
               <label htmlFor='exampleFeedback' className='form-label'>

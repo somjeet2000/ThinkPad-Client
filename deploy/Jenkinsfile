@@ -24,7 +24,10 @@ pipeline {
     agent any
 
     // Mention the Environment variables
-    environment {}
+    environment {
+        GITHUB_URL = 'https://github.com/somjeet2000/ThinkPad-Client.git'
+        NETLIFY_AUTH_TOKEN = credentials('netlify-auth-token')
+    }
 
     // Stages will run to build the pipeline
     stages {
@@ -39,7 +42,21 @@ pipeline {
         // Stage 2: Code Checkout
         stage('Code Checkout') {
             steps {
+                script {
+                    // Check if Branch is selected as Others, and Others is empty
+                    if(params.Branch == 'Others' && !params.Others?.trim()) {
+                        error "Branch Name is required when selected Others as Branch"
+                    }
 
+                    // Determine the Branch to select
+                    def branchToSelect = params.Branch == 'Others' ? params.Others : params.Branch
+                    echo "Branch to Build: ${branchToCheckout}"
+
+                    checkout scmGit(
+                        branches: [[name: "*/${branchToCheckout}"]], 
+                        extensions: [], 
+                        userRemoteConfigs: [[url: '${GITHUB_URL}']])
+                }
             }
         }
 
@@ -48,19 +65,47 @@ pipeline {
         // Stage 4: SonarQube Quality Gate
 
         // Stage 5: Install Dependencies
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
 
         // Stage 6: Build Application
+        stage('Build Application') {
+            steps {
+                sh 'npm run build'
+            }
+        }
 
-        // Stage 7: Deploy to Netlify
-
+        // Stage 7: Deploy to Netlify Service
+        stage('Deploy to Netlify Service') {
+            steps {
+                script {
+                    if (params.Environment == 'Development') {
+                        sh 'netlify deploy --prod --auth $NETLIFY_AUTH_TOKEN'
+                    } else if (params.Environment == 'Production') {
+                        sh 'netlify deploy --prod --auth $NETLIFY_AUTH_TOKEN'
+                    }
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo 'Deployment to Netlify Successful!'
+            script {
+                emailext subject: "Deployment Successful",
+                          body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} was successful.",
+                          to: 'somjeetsrimani@gmail.com'
+            }
         }
         failure {
-            echo 'Deployment failed. Check the logs.'
+            script {
+                emailext subject: "Deployment Failed",
+                          body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} failed. Please check the logs.",
+                          to: 'somjeetsrimani@gmail.com'
+            }
         }
     }
 }

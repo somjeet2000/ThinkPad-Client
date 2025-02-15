@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import authContext from '../context/authentication/AuthenticationContext';
 import { Link, useNavigate } from 'react-router-dom';
 import alertContext from '../context/alert/AlertContext';
@@ -87,7 +87,7 @@ const Login = () => {
       <div className='container my-3'>
         <h2 className='text-center'>Login to continue in ThinkPad</h2>
         <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
+          <div>
             <label htmlFor='exampleInputEmail1' className='form-label'>
               Email address
             </label>
@@ -102,7 +102,7 @@ const Login = () => {
             />
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{emailError}</p>
-          <div className='mb-3'>
+          <div>
             <label htmlFor='exampleInputPassword1' className='form-label'>
               Password
             </label>

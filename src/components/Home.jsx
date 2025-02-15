@@ -4,14 +4,14 @@ import Notes from './Notes';
 import Alert from './Alert';
 import alertContext from '../context/alert/AlertContext';
 
-const Home = (props) => {
+const Home = ({ searchTag }) => {
   const context = useContext(alertContext);
   const { alert } = context;
   return (
     <>
       <Alert alert={alert} />
       {/* <AddNote showAlert={showAlert} /> */}
-      <Notes />
+      <Notes searchTag={searchTag} />
     </>
   );
 };

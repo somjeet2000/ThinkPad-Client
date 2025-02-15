@@ -9,6 +9,8 @@ import Signup from './components/Signup';
 import AuthenticationState from './context/authentication/AuthenticationState';
 import AlertState from './context/alert/AlertState';
 import ForgotPassword from './components/ForgotPassword';
+import Profile from './components/Profile';
+import { useState } from 'react';
 
 /*
 Very Important:-
@@ -20,6 +22,7 @@ Very Important:-
 */
 
 function App() {
+  const [searchTag, setSearchTag] = useState('');
   return (
     <>
       <AlertState>
@@ -27,12 +30,16 @@ function App() {
           <AuthenticationState>
             <BrowserRouter>
               <Routes>
-                <Route path='/' element={<Navbar />}>
-                  <Route index element={<Home />} />
+                <Route
+                  path='/'
+                  element={<Navbar setSearchTag={setSearchTag} />}
+                >
+                  <Route index element={<Home searchTag={searchTag} />} />
                   <Route path='about' element={<About />} />
                   <Route path='login' element={<Login />} />
                   <Route path='signup' element={<Signup />} />
                   <Route path='forgotpassword' element={<ForgotPassword />} />
+                  <Route path='profile' element={<Profile />} />
                 </Route>
               </Routes>
             </BrowserRouter>

@@ -13,7 +13,7 @@ const AddNote2 = (props) => {
   const [titleError, setTitleError] = useState('');
   const [description, setDescription] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
-  const [tag, setTag] = useState('');
+  const [tag, setTag] = useState('Personal');
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -61,12 +61,14 @@ const AddNote2 = (props) => {
       setDescriptionError('Description should be atleast 5 characters');
       isValid = false;
     }
+
     if (isValid) {
+      console.log(title, description, tag);
       addNote(title, description, tag);
       showAlert('Note has been added', 'success');
       setTitle('');
       setDescription('');
-      setTag('');
+      // setTag('Personal');
       addNoteReferenceClose.current.click();
     }
   };
@@ -105,7 +107,7 @@ const AddNote2 = (props) => {
             </div>
             <div className='modal-body'>
               <form>
-                <div className='mb-3'>
+                <div>
                   <label htmlFor='title' className='form-label'>
                     Title
                   </label>
@@ -122,7 +124,7 @@ const AddNote2 = (props) => {
                 <p style={{ color: '#bf2d31', fontWeight: '500' }}>
                   {titleError}
                 </p>
-                <div className='mb-3'>
+                <div>
                   <label htmlFor='description' className='form-label'>
                     Description
                   </label>
@@ -139,19 +141,31 @@ const AddNote2 = (props) => {
                 <p style={{ color: '#bf2d31', fontWeight: '500' }}>
                   {descriptionError}
                 </p>
-                <div className='mb-3'>
+                <div>
                   <label htmlFor='tag' className='form-label'>
                     Tag
-                    (Personal/Education/Entertainment/Movies/Music/Sports/...)
                   </label>
-                  <input
+                  {/* <input
                     type='text'
                     className='form-control'
                     id='tag'
                     name='tag'
                     onChange={handleChange}
                     value={tag}
-                  />
+                  /> */}
+                  <select
+                    className='form-select'
+                    aria-label='Default select example'
+                    value={tag}
+                    onChange={handleChange}
+                    id='tag'
+                    name='tag'
+                  >
+                    <option value='Personal'>Personal</option>
+                    <option value='Education'>Education</option>
+                    <option value='Work'>Work</option>
+                    <option value='Others'>Others</option>
+                  </select>
                 </div>
               </form>
             </div>

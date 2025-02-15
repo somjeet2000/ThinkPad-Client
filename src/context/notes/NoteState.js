@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import noteContext from './NoteContext';
 
 const NoteState = (props) => {
@@ -7,17 +7,21 @@ const NoteState = (props) => {
   const [notes, setNotes] = useState(notesInitial);
 
   // Get all notes
-  const getAllNotes = async () => {
-    const response = await fetch(`${host}/api/notes/fetchallnotes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'auth-token': localStorage.getItem('token'),
-      },
-    });
-    const responseJSON = await response.json();
-    setNotes(responseJSON);
-  };
+  const getAllNotes = useCallback(async () => {
+    try {
+      const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token'),
+        },
+      });
+      const responseData = await response.json();
+      setNotes(responseData);
+    } catch (error) {
+      console.error('Error fetching notes:', error);
+    }
+  }, []);
 
   // Add a note
   const addNote = async (title, description, tag) => {
@@ -77,11 +81,29 @@ const NoteState = (props) => {
       if (element._id === id) {
         updatedNotes[i].title = title;
         updatedNotes[i].description = description;
-        updatedNotes[i].tag = tag === '' ? 'Default' : tag;
+        updatedNotes[i].tag = tag;
         break;
       }
     }
     setNotes(updatedNotes);
+  };
+
+  // Search notes based on the tag
+  const searchNote = async (query) => {
+    const response = await fetch(`${host}/api/notes/search?tag=${query}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': localStorage.getItem('token'),
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: No notes found`);
+    }
+    const responseData = await response.json();
+    console.log(responseData);
+    setNotes(responseData.length > 0 ? responseData : []);
   };
 
   return (
@@ -92,6 +114,7 @@ const NoteState = (props) => {
         addNote,
         deleteNote,
         updateNote,
+        searchNote,
       }}
     >
       {props.children}

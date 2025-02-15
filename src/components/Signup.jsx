@@ -154,7 +154,7 @@ const Signup = () => {
           Register Yourself to continue in ThinkPad
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
+          <div>
             <label htmlFor='exampleInputName1' className='form-label'>
               Name
             </label>
@@ -169,7 +169,7 @@ const Signup = () => {
             />
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{nameError}</p>
-          <div className='mb-3'>
+          <div>
             <label htmlFor='exampleInputEmail1' className='form-label'>
               Email address
             </label>
@@ -187,7 +187,7 @@ const Signup = () => {
             </div> */}
           </div>
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>{emailError}</p>
-          <div className='mb-3'>
+          <div>
             <label htmlFor='exampleInputPassword1' className='form-label'>
               Password
             </label>
@@ -216,7 +216,7 @@ const Signup = () => {
           Implement the functionality for Forget Password - Bug 10001
           ---START---
           */}
-          <div className='mb-3'>
+          <div>
             <label className='form-label'>Select your question</label>
             <select
               className='form-select'
@@ -245,7 +245,7 @@ const Signup = () => {
           <p style={{ color: '#bf2d31', fontWeight: '500' }}>
             {securityQuestionError}
           </p>
-          <div className='mb-3'>
+          <div>
             <label htmlFor='exampleInputSecurityAnswer' className='form-label'>
               Your Answer
             </label>
