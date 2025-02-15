@@ -92,8 +92,16 @@ pipeline {
 
         // Stage 6: Deploy to Netlify Service
         stage('Deploy to Netlify Service') {
+            agent {
+                docker {
+                    image 'node:20-alpine'
+                    args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 script {
+                    sh 'npm install -g netlify-cli'
+                    echo 'Netlify CLI Installed Successfully'
                     def siteId = params.Environment == 'Development' ? DEVELOPMENT_SITE_ID : PRODUCTION_SITE_ID
                     sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId}"
                     echo "🚀 Deployed to ${params.Environment}."
@@ -105,14 +113,14 @@ pipeline {
     post {
         success {
             script {
-                emailext subject: "✅ Deployment Successful",
+                emailext subject: "Deployment Successful",
                     body: "The deployment to ${params.Environment} from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} was successful.",
                     to: 'somjeetsrimani@gmail.com'
             }
         }
         failure {
             script {
-                emailext subject: "❌ Deployment Failed",
+                emailext subject: "Deployment Failed",
                     body: "Deployment to ${params.Environment} failed. Check logs for details.",
                     to: 'somjeetsrimani@gmail.com'
             }
