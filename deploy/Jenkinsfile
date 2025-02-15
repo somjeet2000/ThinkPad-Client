@@ -80,20 +80,21 @@ pipeline {
             }
             steps {
                 script {
-                    def BUILD_ENV = params.Environment == 'Development' ? 'NODE_ENV=development' : 'NODE_ENV=production'
+                    def BUILD_ENV = params.Environment == 'Development' ? 'development' : 'production'
                     echo "🚀 Building with Environment: ${BUILD_ENV}"
 
                     sh """
                         npx update-browserslist-db@latest
                         npm ci
-                        echo 'CI=false ${BUILD_ENV} npm run build'
-                        CI=false ${BUILD_ENV} npm run build
+                        export NODE_ENV=${BUILD_ENV}
+                        export REACT_APP_ENV=${BUILD_ENV}
+                        CI=false npm run build
                     """
                     echo '✅ Project Built Successfully.'
                 }
             }
         }
-
+        
         // Stage 6: Deploy to Netlify Service
         stage('Deploy to Netlify Service') {
             agent {
