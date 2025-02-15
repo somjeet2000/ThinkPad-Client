@@ -72,8 +72,10 @@ pipeline {
                 }
             }
             steps {
-                sh 'npm install'
-                sh 'Dependencies Installed Successfully.'
+                script {
+                    sh 'npm install'
+                    sh 'Dependencies Installed Successfully.'
+                }
             }
         }
 
@@ -86,8 +88,10 @@ pipeline {
                 }
             }
             steps {
-                sh 'npm run build'
-                sh 'Project Build Successfully.'
+                script {
+                    sh 'npm run build'
+                    sh 'Project Build Successfully.'
+                }
             }
         }
 
