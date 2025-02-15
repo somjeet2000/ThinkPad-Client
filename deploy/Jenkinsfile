@@ -73,20 +73,21 @@ pipeline {
         // Stage 5: Build Application
         stage('Install Dependencies & Build Application') {
             agent {
-               docker {
+                docker {
                     image 'node:20-alpine'
                     args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
                 script {
-                    def BUILD_ENV = params.Environment == 'Development' ? 'NODE_ENV=development' : ''
-                    echo '${BUILD_ENV}'
-                    sh '''
+                    def BUILD_ENV = params.Environment == 'Development' ? 'NODE_ENV=development' : 'NODE_ENV=production'
+                    echo "🚀 Building with Environment: ${BUILD_ENV}"
+
+                    sh """
                         npx update-browserslist-db@latest
                         npm ci
-                        CI=false ${BUILD_ENV} npm run build
-                    '''
+                        export ${BUILD_ENV} && npm run build
+                    """
                     echo '✅ Project Built Successfully.'
                 }
             }
