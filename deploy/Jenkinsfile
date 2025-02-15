@@ -70,6 +70,25 @@ pipeline {
 
         // Stage 4: SonarQube Quality Gate
 
+        // Stage 6: Generate Application Configuration
+        stage('Generate Application Configuration') {
+            steps {
+                script {
+                    def apiUrl = params.Environment == 'Development' 
+                                 ? 'https://thinkpad-development.onrender.com' 
+                                 : 'https://thinkpad-production.onrender.com'
+                    
+                    echo "Selected Environment: ${params.Environment}"
+                    echo "API URL: ${apiUrl}"
+
+                    sh """
+                        echo "REACT_APP_THINKPAD_SERVER=${apiUrl}" > .env.production
+                        cat .env.production
+                    """
+                }
+            }
+        }
+
         // Stage 5: Build Application
         stage('Install Dependencies & Build Application') {
             agent {
@@ -94,7 +113,7 @@ pipeline {
                 }
             }
         }
-        
+
         // Stage 6: Deploy to Netlify Service
         stage('Deploy to Netlify Service') {
             agent {
