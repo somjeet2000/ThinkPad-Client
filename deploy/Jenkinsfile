@@ -100,10 +100,11 @@ pipeline {
             }
             steps {
                 script {
+                    def publishDir = 'build'
                     sh 'npm install -g netlify-cli'
                     echo 'Netlify CLI Installed Successfully'
                     def siteId = params.Environment == 'Development' ? DEVELOPMENT_SITE_ID : PRODUCTION_SITE_ID
-                    sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId}"
+                    sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId} --dir $publishDir"
                     echo "🚀 Deployed to ${params.Environment}."
                 }
             }
@@ -113,16 +114,16 @@ pipeline {
     post {
         success {
             script {
-                emailext subject: "Deployment Successful",
-                    body: "The deployment to ${params.Environment} from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} was successful.",
-                    to: 'somjeetsrimani@gmail.com'
+                mail to: 'somjeetsrimani@gmail.com',
+                    subject: "✅ Deployment Successful: ${env.JOB_NAME}",
+                    body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} was successful.\n\nCheck Jenkins for more details: ${env.BUILD_URL}"
             }
         }
         failure {
             script {
-                emailext subject: "Deployment Failed",
-                    body: "Deployment to ${params.Environment} failed. Check logs for details.",
-                    to: 'somjeetsrimani@gmail.com'
+                mail to: 'somjeetsrimani@gmail.com',
+                    subject: "❌ Deployment Failed: ${env.JOB_NAME}",
+                    body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} failed.\n\nCheck logs for details: ${env.BUILD_URL}"
             }
         }
     }
