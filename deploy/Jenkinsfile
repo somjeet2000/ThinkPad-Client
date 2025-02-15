@@ -25,7 +25,6 @@ pipeline {
 
     // Mention the Environment variables
     environment {
-        GITHUB_URL = 'https://github.com/somjeet2000/ThinkPad-Client.git'
         NETLIFY_AUTH_TOKEN = credentials('netlify-auth-token')
     }
 
@@ -50,12 +49,12 @@ pipeline {
 
                     // Determine the Branch to select
                     def branchToSelect = params.Branch == 'Others' ? params.Others : params.Branch
-                    echo "Branch to Build: ${branchToCheckout}"
+                    echo "Branch to Build: ${branchToSelect}"
 
                     checkout scmGit(
-                        branches: [[name: "*/${branchToCheckout}"]], 
+                        branches: [[name: "*/${branchToSelect}"]], 
                         extensions: [], 
-                        userRemoteConfigs: [[url: '${GITHUB_URL}']])
+                        userRemoteConfigs: [[url: 'https://github.com/somjeet2000/ThinkPad-Client.git']])
                 }
             }
         }
