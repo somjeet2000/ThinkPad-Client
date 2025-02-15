@@ -71,8 +71,8 @@ pipeline {
 
         // Stage 4: SonarQube Quality Gate
 
-        // Stage 5: Install Dependencies
-        stage('Install Dependencies') {
+        // Stage 5: Build Application
+        stage('Install Dependencies & Build Application') {
             agent {
                docker {
                     image 'node:20-alpine'
@@ -82,28 +82,14 @@ pipeline {
             steps {
                 script {
                     sh 'npm install'
-                    echo 'Dependencies Installed Successfully.'
-                }
-            }
-        }
-
-        // Stage 6: Build Application
-        stage('Build Application') {
-            agent {
-               docker {
-                    image 'node:20-alpine'
-                    args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
-            steps {
-                script {
+                    echo '👍 Dependencies Installed Successfully.'
                     sh 'npm run build'
-                    echo 'Project Build Successfully.'
+                    echo '🎉 Project Build Successfully.'
                 }
             }
         }
 
-        // Stage 7: Deploy to Netlify Service
+        // Stage 6: Deploy to Netlify Service
         stage('Deploy to Netlify Service') {
             steps {
                 script {
@@ -120,16 +106,16 @@ pipeline {
     post {
         success {
             script {
-                emailext subject: "Deployment Successful",
-                          body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} was successful.",
-                          to: 'somjeetsrimani@gmail.com'
+                email subject: "Deployment Successful",
+                    body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} was successful.",
+                    to: 'somjeetsrimani@gmail.com'
             }
         }
         failure {
             script {
-                emailext subject: "Deployment Failed",
-                          body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} failed. Please check the logs.",
-                          to: 'somjeetsrimani@gmail.com'
+                email subject: "Deployment Failed",
+                    body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} failed. Please check the logs.",
+                    to: 'somjeetsrimani@gmail.com'
             }
         }
     }
