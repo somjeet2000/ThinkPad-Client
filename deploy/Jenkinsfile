@@ -80,10 +80,12 @@ pipeline {
             }
             steps {
                 script {
+                    def BUILD_ENV = params.Environment == 'Development' ? 'NODE_ENV=development' : ''
+                    echo '${BUILD_ENV}'
                     sh '''
                         npx update-browserslist-db@latest
                         npm ci
-                        CI=false npm run build
+                        CI=false ${BUILD_ENV} npm run build
                     '''
                     echo '✅ Project Built Successfully.'
                 }
