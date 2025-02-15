@@ -86,7 +86,8 @@ pipeline {
                     sh """
                         npx update-browserslist-db@latest
                         npm ci
-                        export ${BUILD_ENV} && CI=false npm run build
+                        echo 'CI=false ${BUILD_ENV} npm run build'
+                        CI=false ${BUILD_ENV} npm run build
                     """
                     echo '✅ Project Built Successfully.'
                 }
