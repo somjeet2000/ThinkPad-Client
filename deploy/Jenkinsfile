@@ -1,9 +1,8 @@
 /*
 Requirements:
     Branch Specific:- 
-        main branch needs to be deployed in Development environment. main -> Development
+        main branch needs to be deployed in Production environment. main -> Production
         Jenkinsfile should be updated in the only in main branch.   Jenkinsfile -> main
-        Release branches will be deployed into Production environment.  1.0.0.25.02 -> Production
 
     Stages:-
         1. Clean workspace
@@ -24,7 +23,7 @@ pipeline {
     agent any
 
     parameters {
-        choice(name: 'Environment', choices: ['Development', 'Production'], description: 'Select deployment environment')
+        choice(name: 'Environment', choices: ['Production'], description: 'Select deployment environment')
         choice(name: 'Branch', choices: ['main', 'development', 'Others'], description: 'Select branch')
         string(name: 'Others', defaultValue: '', description: 'Specify branch name if Others is selected')
     }
@@ -32,8 +31,8 @@ pipeline {
     // Mention the Environment variables
     environment {
         NETLIFY_AUTH_TOKEN = credentials('netlify-auth-token')
-        DEVELOPMENT_SITE_ID = 'b75a440e-3888-4c72-83b1-76ea469517b7'
-        PRODUCTION_SITE_ID = '40d44ad4-cc39-4654-ba54-0f9e34214b13'
+        NETLIFY_SITE_ID = 'b75a440e-3888-4c72-83b1-76ea469517b7'
+        // PRODUCTION_SITE_ID = '40d44ad4-cc39-4654-ba54-0f9e34214b13'
     }
 
     // Stages will run to build the pipeline
@@ -70,25 +69,6 @@ pipeline {
 
         // Stage 4: SonarQube Quality Gate
 
-        // Stage 6: Generate Application Configuration
-        stage('Generate Application Configuration') {
-            steps {
-                script {
-                    def apiUrl = params.Environment == 'Development' 
-                                 ? 'https://thinkpad-development.onrender.com' 
-                                 : 'https://thinkpad-production.onrender.com'
-                    
-                    echo "Selected Environment: ${params.Environment}"
-                    echo "API URL: ${apiUrl}"
-
-                    sh """
-                        echo "REACT_APP_THINKPAD_SERVER=${apiUrl}" > .env.production
-                        cat .env.production
-                    """
-                }
-            }
-        }
-
         // Stage 5: Build Application
         stage('Install Dependencies & Build Application') {
             agent {
@@ -99,14 +79,9 @@ pipeline {
             }
             steps {
                 script {
-                    def BUILD_ENV = params.Environment == 'Development' ? 'development' : 'production'
-                    echo "🚀 Building with Environment: ${BUILD_ENV}"
-
                     sh """
                         npx update-browserslist-db@latest
                         npm ci
-                        export NODE_ENV=${BUILD_ENV}
-                        export REACT_APP_ENV=${BUILD_ENV}
                         CI=false npm run build
                     """
                     echo '✅ Project Built Successfully.'
@@ -127,7 +102,7 @@ pipeline {
                     def publishDir = 'build'
                     sh 'npm install -g netlify-cli'
                     echo 'Netlify CLI Installed Successfully'
-                    def siteId = params.Environment == 'Development' ? DEVELOPMENT_SITE_ID : PRODUCTION_SITE_ID
+                    def siteId = NETLIFY_SITE_ID
                     sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId} --dir $publishDir"
                     echo "🚀 Deployed to ${params.Environment}."
                 }
