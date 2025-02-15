@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import AddNote2 from './AddNote2';
 
-const Notes = () => {
+const Notes = ({ searchTag }) => {
   const context = useContext(noteContext);
-  const { notes, getAllNotes } = context;
+  const { notes, getAllNotes, searchNote } = context;
   const [selectedNote, setSelectedNote] = useState(null);
   const navigate = useNavigate();
   const [addNote, setAddNote] = useState(false);
@@ -39,14 +39,19 @@ const Notes = () => {
         localStorage.removeItem('tokenSetTime');
         navigate('/login');
       } else {
-        getAllNotes();
-        // eslint-disable-next-line
+        if (searchTag.length === 0) {
+          getAllNotes();
+        } else {
+          searchNote(searchTag);
+        }
       }
     } else {
       navigate('/login');
     }
-  }, [getAllNotes, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTag, searchNote]);
 
+  // Reset token timestamp on user activity
   useEffect(() => {
     const resetTimer = () => {
       localStorage.setItem('tokenSetTime', Date.now().toString());
@@ -95,15 +100,16 @@ const Notes = () => {
             </button>
           </div>
         </div>
-        {/* <h2>Your Notes</h2> */}
-        <div className='container mx-1'>
-          {notes.length === 0 && 'No Notes to display.'}
-        </div>
-        {notes.map((notes) => {
-          return (
-            <NoteItem key={notes._id} notes={notes} updateNote={updateNote} />
-          );
-        })}
+
+        {notes.length === 0 ? (
+          <p className='text-muted'>No Notes to display.</p>
+        ) : (
+          notes.map((note) => {
+            return (
+              <NoteItem key={note._id} notes={note} updateNote={updateNote} />
+            );
+          })
+        )}
       </div>
       {/* You can't use ref={ref} here, you have to use reference or any other prop name. */}
       {selectedNote && (

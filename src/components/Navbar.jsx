@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import authContext from '../context/authentication/AuthenticationContext';
 import alertContext from '../context/alert/AlertContext';
 import Logo from './Logo.png';
 
-const Navbar = () => {
+const Navbar = ({ setSearchTag }) => {
   let location = useLocation();
   const navigate = useNavigate();
   const host = process.env.REACT_APP_THINKPAD_SERVER;
@@ -15,8 +14,7 @@ const Navbar = () => {
   const { showAlert } = alertcontext;
   const [name, setName] = useState(loggedinUserName);
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTag, setSearchTag] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Ref for dropdown
   const dropdownRef = useRef(null);
@@ -80,6 +78,16 @@ const Navbar = () => {
       window.removeEventListener('click', handleOutsideClick);
     };
   }, [isOpen]);
+
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    if (value === '') {
+      setSearchTag(''); // ✅ Reset search when input is cleared
+    } else {
+      setSearchTag(value);
+    }
+  };
 
   return (
     <div>
@@ -194,6 +202,15 @@ const Navbar = () => {
                   alignItems: 'center',
                 }}
               >
+                <input
+                  type='text'
+                  className='form-control mx-3'
+                  placeholder='Search notes by tag...'
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  style={{ width: '200px' }}
+                />
+
                 {/* Profile Button */}
                 <button
                   className='btn btn-light mx-2'
