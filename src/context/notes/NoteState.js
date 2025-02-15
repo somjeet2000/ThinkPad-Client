@@ -21,7 +21,7 @@ const NoteState = (props) => {
     } catch (error) {
       console.error('Error fetching notes:', error);
     }
-  }, [host]);
+  }, []);
 
   // Add a note
   const addNote = async (title, description, tag) => {
@@ -102,6 +102,7 @@ const NoteState = (props) => {
       throw new Error(`Error ${response.status}: No notes found`);
     }
     const responseData = await response.json();
+    console.log(responseData);
     setNotes(responseData.length > 0 ? responseData : []);
   };
 

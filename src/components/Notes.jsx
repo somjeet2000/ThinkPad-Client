@@ -12,6 +12,7 @@ const Notes = ({ searchTag }) => {
   const [selectedNote, setSelectedNote] = useState(null);
   const navigate = useNavigate();
   const [addNote, setAddNote] = useState(false);
+  const [loading, setLoading] = useState(true); // Track loading state
 
   let ref = useRef(null);
   let refClose = useRef(null);
@@ -28,28 +29,28 @@ const Notes = ({ searchTag }) => {
 
   // To display the notes for the user.
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const tokenSetTime = localStorage.getItem('tokenSetTime');
-    if (token && tokenSetTime) {
-      const currentTime = Date.now();
-      const tokenAge = currentTime - parseInt(tokenSetTime, 10);
-      if (tokenAge > 3600000) {
-        // 1 hour = 3600000 ms
-        localStorage.removeItem('token');
-        localStorage.removeItem('tokenSetTime');
-        navigate('/login');
-      } else {
-        if (searchTag.length === 0) {
-          getAllNotes();
+    const fetchNotes = async () => {
+      const token = localStorage.getItem('token');
+      const tokenSetTime = localStorage.getItem('tokenSetTime');
+      if (token && tokenSetTime) {
+        const currentTime = Date.now();
+        const tokenAge = currentTime - parseInt(tokenSetTime, 10);
+        if (tokenAge > 3600000) {
+          // 1 hour = 3600000 ms
+          localStorage.removeItem('token');
+          localStorage.removeItem('tokenSetTime');
+          navigate('/login');
         } else {
-          searchNote(searchTag);
+          setLoading(true);
+          await getAllNotes();
+          setLoading(false);
         }
+      } else {
+        navigate('/login');
       }
-    } else {
-      navigate('/login');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTag, searchNote]);
+    };
+    fetchNotes();
+  }, []);
 
   // Reset token timestamp on user activity
   useEffect(() => {
@@ -75,6 +76,14 @@ const Notes = ({ searchTag }) => {
     );
   }, []);
 
+  useEffect(() => {
+    if (!searchTag) {
+      getAllNotes(); // Fetch all notes when searchTag is empty
+    } else {
+      searchNote(searchTag); // Otherwise, search based on tag
+    }
+  }, [searchTag]);
+
   const handleClick = () => {
     setSelectedNote(null);
     setAddNote(true);
@@ -82,6 +91,17 @@ const Notes = ({ searchTag }) => {
       addNoteRef.current.click();
     }, 0);
   };
+
+  // Show Bootstrap Spinner when loading
+  if (loading) {
+    return (
+      <div className='d-flex justify-content-center align-items-center vh-100'>
+        <div className='spinner-border text-primary' role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='container my-3'>

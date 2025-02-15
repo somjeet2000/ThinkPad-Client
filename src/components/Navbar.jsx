@@ -25,6 +25,8 @@ const Navbar = ({ setSearchTag }) => {
     navigate('/login');
     showAlert('User Logged Out Successfully', 'success');
     setIsOpen(false);
+    setSearchTerm('');
+    setSearchTag('');
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,7 +85,7 @@ const Navbar = ({ setSearchTag }) => {
     const value = event.target.value;
     setSearchTerm(value);
     if (value === '') {
-      setSearchTag(''); // ✅ Reset search when input is cleared
+      setSearchTag(''); //Reset search when input is cleared
     } else {
       setSearchTag(value);
     }
