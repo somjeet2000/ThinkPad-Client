@@ -25,7 +25,7 @@ pipeline {
 
     parameters {
         choice(name: 'Environment', choices: ['Development', 'Production'], description: 'Select deployment environment')
-        choice(name: 'Branch', choices: ['main', 'release', 'Others'], description: 'Select branch')
+        choice(name: 'Branch', choices: ['main', 'development', 'Others'], description: 'Select branch')
         string(name: 'Others', defaultValue: '', description: 'Specify branch name if Others is selected')
     }
 
@@ -56,8 +56,7 @@ pipeline {
                     }
 
                     // Determine the Branch to select
-                    def branchToSelect = params.Branch == 'Others' ? params.Others : params.Branch
-                    echo "Branch to Build: ${branchToSelect}"
+                    def branchToSelect = params.Branch == 'Others' ? params.Others.trim() : params.Branch
 
                     checkout scmGit(
                         branches: [[name: "*/${branchToSelect}"]], 
@@ -81,10 +80,12 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'npm install'
-                    echo '👍 Dependencies Installed Successfully.'
-                    sh 'npm run build'
-                    echo '🎉 Project Build Successfully.'
+                    sh '''
+                        npx update-browserslist-db@latest
+                        npm ci
+                        CI=false npm run build
+                    '''
+                    echo '✅ Project Built Successfully.'
                 }
             }
         }
@@ -93,11 +94,9 @@ pipeline {
         stage('Deploy to Netlify Service') {
             steps {
                 script {
-                    if (params.Environment == 'Development') {
-                        sh 'netlify deploy --prod --auth $NETLIFY_AUTH_TOKEN --site $DEVELOPMENT_SITE_ID'
-                    } else if (params.Environment == 'Production') {
-                        sh 'netlify deploy --prod --auth $NETLIFY_AUTH_TOKEN --site $PRODUCTION_SITE_ID'
-                    }
+                    def siteId = params.Environment == 'Development' ? DEVELOPMENT_SITE_ID : PRODUCTION_SITE_ID
+                    sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId}"
+                    echo "🚀 Deployed to ${params.Environment}."
                 }
             }
         }
@@ -106,15 +105,15 @@ pipeline {
     post {
         success {
             script {
-                email subject: "Deployment Successful",
-                    body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} was successful.",
+                emailext subject: "✅ Deployment Successful",
+                    body: "The deployment to ${params.Environment} from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} was successful.",
                     to: 'somjeetsrimani@gmail.com'
             }
         }
         failure {
             script {
-                email subject: "Deployment Failed",
-                    body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} failed. Please check the logs.",
+                emailext subject: "❌ Deployment Failed",
+                    body: "Deployment to ${params.Environment} failed. Check logs for details.",
                     to: 'somjeetsrimani@gmail.com'
             }
         }
