@@ -73,13 +73,18 @@ pipeline {
             steps {
                 script {
                     if (params.Environment == 'Development') {
-                        sh 'ls -al' // List files before copy
+                        echo 'Before removing the environment variables'
+                        sh 'ls -la'
                         sh 'cp .env.development .env'
-                        sh 'ls -al' // List files after copy
-                        sh 'cat .env' // show contents of .env
+                        sh 'rm .env.development'
+                        sh 'rm .env.production'
+                        echo 'After removing the environment variables'
+                        sh 'ls -la'
                         echo 'Using development environment variables.'
                     } else if (params.Environment == 'Production') {
                         sh 'cp .env.production .env'
+                        sh 'rm .env.development'
+                        sh 'rm .env.production'
                         echo 'Using production environment variables.'
                     } else {
                         error 'Invalid environment selected.'
