@@ -75,16 +75,16 @@ pipeline {
                     if (params.Environment == 'Development') {
                         echo 'Before removing the environment variables'
                         sh 'ls -la'
-                        sh 'cp .env.development .env'
-                        sh 'rm .env.development'
                         sh 'rm .env.production'
-                        echo 'After removing the environment variables'
                         sh 'ls -la'
+                        sh 'mv .env.development .env.production'
+                        sh 'ls -la'
+                        sh 'cat .env.production'
+                        echo 'After removing the environment variables'
                         echo 'Using development environment variables.'
                     } else if (params.Environment == 'Production') {
-                        sh 'cp .env.production .env'
                         sh 'rm .env.development'
-                        sh 'rm .env.production'
+                        sh 'cat .env.production'
                         echo 'Using production environment variables.'
                     } else {
                         error 'Invalid environment selected.'
