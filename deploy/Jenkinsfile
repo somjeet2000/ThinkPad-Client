@@ -12,27 +12,26 @@ Requirements:
         5. Install Dependencies
         6. Build Application
         7. Deploy to Netlify Service
-        8. Post Stages
-
-    Future Scopes:-
-        1. If any error in the SonarQube Code Analysis, the proper report should be sent to an email.
-        2. Post deployment, the confirmation will be send through an email.
 */
 
 pipeline {
     agent any
 
     parameters {
-        choice(name: 'Environment', choices: ['Production'], description: 'Select deployment environment')
+        choice(name: 'Environment', choices: ['Development', 'Production'], description: 'Choose the environment to build')
         choice(name: 'Branch', choices: ['main', 'development', 'Others'], description: 'Select branch')
         string(name: 'Others', defaultValue: '', description: 'Specify branch name if Others is selected')
     }
 
     // Mention the Environment variables
     environment {
+        // Host Docker Connection
+        DOCKER_HOST = 'tcp://host.docker.internal:2375'
+
+        // Netlify Credentials
         NETLIFY_AUTH_TOKEN = credentials('netlify-auth-token')
-        NETLIFY_SITE_ID = 'b75a440e-3888-4c72-83b1-76ea469517b7'
-        // PRODUCTION_SITE_ID = '40d44ad4-cc39-4654-ba54-0f9e34214b13'
+        DEV_SITE_ID = 'efd65b24-988f-43c8-be64-9a86aba14b42'
+        PROD_SITE_ID = 'b75a440e-3888-4c72-83b1-76ea469517b7'
     }
 
     // Stages will run to build the pipeline
@@ -69,6 +68,23 @@ pipeline {
 
         // Stage 4: SonarQube Quality Gate
 
+        // Stage 5: Prepare environment
+        stage('Prepare Environment') {
+            steps {
+                script {
+                    if (params.ENVIRONMENT == 'Development') {
+                        sh 'cp .env.development .env'
+                        echo 'Using development environment variables.'
+                    } else if (params.ENVIRONMENT == 'Production') {
+                        sh 'cp .env.production .env'
+                        echo 'Using production environment variables.'
+                    } else {
+                        error 'Invalid environment selected.'
+                    }
+                }
+            }
+        }
+
         // Stage 5: Build Application
         stage('Install Dependencies & Build Application') {
             agent {
@@ -102,27 +118,10 @@ pipeline {
                     def publishDir = 'build'
                     sh 'npm install -g netlify-cli'
                     echo 'Netlify CLI Installed Successfully'
-                    def siteId = NETLIFY_SITE_ID
+                    def siteId = params.Environment == 'Development' ? env.DEV_SITE_ID : env.PROD_SITE_ID
                     sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId} --dir $publishDir"
                     echo "🚀 Deployed to ${params.Environment}."
                 }
-            }
-        }
-    }
-
-    post {
-        success {
-            script {
-                mail to: 'somjeetsrimani@gmail.com',
-                    subject: "✅ Deployment Successful: ${env.JOB_NAME}",
-                    body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} was successful.\n\nCheck Jenkins for more details: ${env.BUILD_URL}"
-            }
-        }
-        failure {
-            script {
-                mail to: 'somjeetsrimani@gmail.com',
-                    subject: "❌ Deployment Failed: ${env.JOB_NAME}",
-                    body: "The deployment to ${params.Environment} environment from Branch: ${params.Branch == 'Others' ? params.Others : params.Branch} failed.\n\nCheck logs for details: ${env.BUILD_URL}"
             }
         }
     }
