@@ -72,10 +72,10 @@ pipeline {
         stage('Prepare Environment') {
             steps {
                 script {
-                    if (params.ENVIRONMENT == 'Development') {
+                    if (params.Environment == 'Development') {
                         sh 'cp .env.development .env'
                         echo 'Using development environment variables.'
-                    } else if (params.ENVIRONMENT == 'Production') {
+                    } else if (params.Environment == 'Production') {
                         sh 'cp .env.production .env'
                         echo 'Using production environment variables.'
                     } else {
