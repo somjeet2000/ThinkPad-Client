@@ -68,30 +68,30 @@ pipeline {
 
         // Stage 4: SonarQube Quality Gate
 
-        // Stage 5: Prepare environment
-        stage('Prepare Environment') {
-            steps {
-                script {
-                    if (params.Environment == 'Development') {
-                        echo 'Preparing the Environment Variables'
-                        sh 'rm .env.production'
-                        sh 'mv .env.development .env'
-                        sh 'cat .env'
-                        sh 'ls -la'
-                        echo 'Using development environment variables'
-                    } else if (params.Environment == 'Production') {
-                        echo 'Preparing the Environment Variables'
-                        sh 'rm .env.development'
-                        sh 'mv .env.production .env'
-                        sh 'cat .env'
-                        sh 'ls -la'
-                        echo 'Using production environment variables.'
-                    } else {
-                        error 'Invalid environment selected.'
-                    }
-                }
-            }
-        }
+        // // Stage 5: Prepare environment
+        // stage('Prepare Environment') {
+        //     steps {
+        //         script {
+        //             if (params.Environment == 'Development') {
+        //                 echo 'Preparing the Environment Variables'
+        //                 sh 'rm .env.production'
+        //                 sh 'mv .env.development .env'
+        //                 sh 'cat .env'
+        //                 sh 'ls -la'
+        //                 echo 'Using development environment variables'
+        //             } else if (params.Environment == 'Production') {
+        //                 echo 'Preparing the Environment Variables'
+        //                 sh 'rm .env.development'
+        //                 sh 'mv .env.production .env'
+        //                 sh 'cat .env'
+        //                 sh 'ls -la'
+        //                 echo 'Using production environment variables.'
+        //             } else {
+        //                 error 'Invalid environment selected.'
+        //             }
+        //         }
+        //     }
+        // }
 
         // Stage 5: Build Application
         stage('Install Dependencies & Build Application') {
@@ -124,11 +124,10 @@ pipeline {
             }
             steps {
                 script {
-                    def publishDir = 'build'
                     sh 'npm install -g netlify-cli'
                     echo 'Netlify CLI Installed Successfully'
                     def siteId = params.Environment == 'Development' ? env.DEV_SITE_ID : env.PROD_SITE_ID
-                    sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId} --dir $publishDir"
+                    sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId} --dir build"
                     echo "🚀 Deployed to ${params.Environment}."
                 }
             }
