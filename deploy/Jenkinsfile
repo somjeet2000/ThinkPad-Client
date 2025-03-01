@@ -73,7 +73,10 @@ pipeline {
             steps {
                 script {
                     if (params.Environment == 'Development') {
+                        sh 'ls -al' // List files before copy
                         sh 'cp .env.development .env'
+                        sh 'ls -al' // List files after copy
+                        sh 'cat .env' // show contents of .env
                         echo 'Using development environment variables.'
                     } else if (params.Environment == 'Production') {
                         sh 'cp .env.production .env'
@@ -96,6 +99,7 @@ pipeline {
             steps {
                 script {
                     sh """
+                        rm -rf build
                         npx update-browserslist-db@latest
                         npm ci
                         CI=false npm run build
