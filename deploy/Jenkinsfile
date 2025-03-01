@@ -103,8 +103,9 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'rm -rf build'
-                    sh 'npm run build'
+                    sh 'rm -rf node_modules build'
+                    sh 'npm ci'
+                    sh 'CI=false npm run build'
                     echo '✅ Project Built Successfully.'
                 }
             }
