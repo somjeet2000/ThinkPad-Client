@@ -104,7 +104,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        rm -rf node_modules build package-lock.json
+                        rm -rf node_modules build
                         npm cache clean --force
                         npm ci
                         CI=false npm run build
