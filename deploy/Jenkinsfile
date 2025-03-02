@@ -1,26 +1,5 @@
-/*
-Requirements:
-    Branch Specific:- 
-        main branch needs to be deployed in Production environment. main -> Production
-        Jenkinsfile should be updated in the only in main branch.   Jenkinsfile -> main
-
-    Stages:-
-        1. Clean workspace
-        2. Code Checkout
-        3. Static Code Analysis by Sonarqube
-        4. SonarQube Quality Gate
-        5. Install Dependencies
-        6. Build Application
-        7. Deploy to Netlify Service
-*/
-
 pipeline {
-    agent {
-        docker {
-            image 'node:20-alpine'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent none  // No global agent, as we use different agents per stage
 
     parameters {
         choice(name: 'Environment', choices: ['Development', 'Production'], description: 'Choose the environment to build')
@@ -28,29 +7,38 @@ pipeline {
         string(name: 'Others', defaultValue: '', description: 'Specify branch name if Others is selected')
     }
 
-    // Mention the Environment variables
     environment {
-        // Host Docker Connection
         DOCKER_HOST = 'tcp://host.docker.internal:2375'
-
-        // Netlify Credentials
         NETLIFY_AUTH_TOKEN = credentials('netlify-auth-token')
         DEV_SITE_ID = 'efd65b24-988f-43c8-be64-9a86aba14b42'
         PROD_SITE_ID = 'b75a440e-3888-4c72-83b1-76ea469517b7'
+        WORKSPACE_DIR = "/workspace"
     }
 
-    // Stages will run to build the pipeline
     stages {
 
-        // Stage 1: Clean Workspace
         stage('Clean Workspace') {
+            agent {
+                docker {
+                    image 'node:20-alpine'
+                    args '--user root -v $PWD:/workspace'
+                }
+            }
             steps {
-                cleanWs()
+                script {
+                    sh "rm -rf $WORKSPACE_DIR/*"
+                    echo '✅ Workspace Cleaned.'
+                }
             }
         }
 
-        // Stage 2: Code Checkout
         stage('Code Checkout') {
+            agent {
+                docker {
+                    image 'node:20-alpine'
+                    args '--user root -v $PWD:/workspace'
+                }
+            }
             steps {
                 script {
                     // Check if Branch is selected as Others, and Others is empty
@@ -58,31 +46,31 @@ pipeline {
                         error "Branch Name is required when selected Others as Branch"
                     }
 
-                    // Determine the Branch to select
                     def branchToSelect = params.Branch == 'Others' ? params.Others.trim() : params.Branch
-
                     checkout scmGit(
-                        branches: [[name: "*/${branchToSelect}"]], 
-                        extensions: [], 
-                        userRemoteConfigs: [[url: 'https://github.com/somjeet2000/ThinkPad-Client.git']])
+                        branches: [[name: "*/${branchToSelect}"]],
+                        extensions: [],
+                        userRemoteConfigs: [[url: 'https://github.com/somjeet2000/ThinkPad-Client.git']]
+                    )
                 }
             }
         }
 
-        // Stage 3: Static Code Analysis
-
-        // Stage 4: SonarQube Quality Gate
-
-        // Stage 5: Build Application
         stage('Install Dependencies & Build Application') {
+            agent {
+                docker {
+                    image 'node:20-alpine'
+                    args '--user root -v $PWD:/workspace'
+                }
+            }
             steps {
                 script {
                     sh """
+                        cd $WORKSPACE_DIR
                         rm -rf node_modules build
                         npm cache clean --force
                         npm ci
 
-                        # Choose the correct .env file
                         if [ "${params.Environment}" = "Development" ]; then
                             cp .env.development .env.production
                             echo '✅ Using Development Environment Variables'
@@ -98,20 +86,19 @@ pipeline {
             }
         }
 
-        // Stage 6: Deploy to Netlify Service
         stage('Deploy to Netlify Service') {
-            // agent {
-            //     docker {
-            //         image 'node:20-alpine'
-            //         args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
-            //     }
-            // }
+            agent {
+                docker {
+                    image 'node:20-alpine'
+                    args '--user root -v $PWD:/workspace'
+                }
+            }
             steps {
                 script {
                     sh 'npm install -g netlify-cli'
                     echo 'Netlify CLI Installed Successfully'
                     def siteId = params.Environment == 'Development' ? env.DEV_SITE_ID : env.PROD_SITE_ID
-                    sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId} --dir build"
+                    sh "netlify deploy --prod --auth ${NETLIFY_AUTH_TOKEN} --site ${siteId} --dir $WORKSPACE_DIR/build"
                     echo "🚀 Deployed to ${params.Environment}."
                 }
             }
