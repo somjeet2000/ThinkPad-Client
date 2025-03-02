@@ -68,31 +68,6 @@ pipeline {
 
         // Stage 4: SonarQube Quality Gate
 
-        // // Stage 5: Prepare environment
-        // stage('Prepare Environment') {
-        //     steps {
-        //         script {
-        //             if (params.Environment == 'Development') {
-        //                 echo 'Preparing the Environment Variables'
-        //                 sh 'rm .env.production'
-        //                 sh 'mv .env.development .env'
-        //                 sh 'cat .env'
-        //                 sh 'ls -la'
-        //                 echo 'Using development environment variables'
-        //             } else if (params.Environment == 'Production') {
-        //                 echo 'Preparing the Environment Variables'
-        //                 sh 'rm .env.development'
-        //                 sh 'mv .env.production .env'
-        //                 sh 'cat .env'
-        //                 sh 'ls -la'
-        //                 echo 'Using production environment variables.'
-        //             } else {
-        //                 error 'Invalid environment selected.'
-        //             }
-        //         }
-        //     }
-        // }
-
         // Stage 5: Build Application
         stage('Install Dependencies & Build Application') {
             agent {
@@ -107,6 +82,16 @@ pipeline {
                         rm -rf node_modules build
                         npm cache clean --force
                         npm ci
+
+                        # Choose the correct .env file
+                        if [ "${params.Environment}" = "Development" ]; then
+                            cp .env.development .env.production
+                            echo '✅ Using Development Environment Variables'
+                        else
+                            cp .env.production .env.production
+                            echo '✅ Using Production Environment Variables'
+                        fi
+
                         CI=false npm run build
                     """
                     echo '✅ Project Built Successfully.'
