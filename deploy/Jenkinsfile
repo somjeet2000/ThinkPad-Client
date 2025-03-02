@@ -15,7 +15,12 @@ Requirements:
 */
 
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:20-alpine'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     parameters {
         choice(name: 'Environment', choices: ['Development', 'Production'], description: 'Choose the environment to build')
@@ -70,12 +75,6 @@ pipeline {
 
         // Stage 5: Build Application
         stage('Install Dependencies & Build Application') {
-            agent {
-                docker {
-                    image 'node:20-alpine'
-                    args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 script {
                     sh """
@@ -101,12 +100,12 @@ pipeline {
 
         // Stage 6: Deploy to Netlify Service
         stage('Deploy to Netlify Service') {
-            agent {
-                docker {
-                    image 'node:20-alpine'
-                    args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
+            // agent {
+            //     docker {
+            //         image 'node:20-alpine'
+            //         args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+            //     }
+            // }
             steps {
                 script {
                     sh 'npm install -g netlify-cli'
